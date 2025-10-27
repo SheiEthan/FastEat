@@ -19,4 +19,5 @@ export default defineNuxtConfig({
           { property: 'og:type', content: 'website' }
         ]
       }
-    },
+  }
+});
