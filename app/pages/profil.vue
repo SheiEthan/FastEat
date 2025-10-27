@@ -111,17 +111,20 @@
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({
-  title: 'Mon Profil - UberEat',
+  title: 'Mon Profil - FastEat',
   meta: [
     { name: 'description', content: 'Gérez vos informations personnelles et votre adresse de livraison.' },
-    { property: 'og:title', content: 'Mon Profil - UberEat' },
+    { property: 'og:title', content: 'Mon Profil - FastEat' },
     { property: 'og:description', content: 'Gérez vos informations personnelles et votre adresse de livraison.' },
     { property: 'og:type', content: 'website' }
   ]
 })
 import type { Client } from '~/modules/client/types'
-const user = ref<Client | null>(null)
+import { useUserStore } from '~/stores/user/userStore'
+import { onMounted, ref } from 'vue'
+const userStore = useUserStore()
 const isLoading = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
@@ -138,28 +141,34 @@ const profileForm = ref({
   }
 })
 
-// Charger les infos utilisateur
+// Charger les infos utilisateur depuis le store
 onMounted(() => {
-  if (typeof window !== 'undefined') {
+  let user = userStore.user
+  // Fallback : si le store est vide, charger depuis localStorage
+  if (!user && typeof window !== 'undefined') {
     const userData = localStorage.getItem('user')
     if (userData) {
-      user.value = JSON.parse(userData)
-      
-      // Remplir le formulaire avec les données utilisateur
-      profileForm.value = {
-        prenom: user.value?.firstName || '',
-        nom: user.value?.lastName || '',
-        email: user.value?.email || '',
-        telephone: user.value?.phone || '',
-        adresse: {
-          rue: user.value?.address?.street || '',
-          codePostal: user.value?.address?.postalCode || '',
-          ville: user.value?.address?.city || ''
-        }
+      try {
+        user = JSON.parse(userData)
+        userStore.user = user
+      } catch {}
+    }
+  }
+  if (user) {
+    profileForm.value = {
+      prenom: user.firstName || '',
+      nom: user.lastName || '',
+      email: user.email || '',
+      telephone: user.phone || '',
+      adresse: {
+        rue: user.address?.street || '',
+        codePostal: user.address?.postalCode || '',
+        ville: user.address?.city || ''
       }
     }
   }
 })
+
 
 const formatDate = (dateString: string) => {
   if (!dateString) return ''
@@ -173,46 +182,33 @@ const formatDate = (dateString: string) => {
 const updateProfile = async () => {
   isLoading.value = true
   message.value = ''
-  
   try {
     // Simuler une sauvegarde (en production, appeler une API)
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Mettre à jour les données en localStorage
-    const updatedUser = {
-      ...user.value,
-      prenom: profileForm.value.prenom,
-      nom: profileForm.value.nom,
-      telephone: profileForm.value.telephone,
-      adresse: profileForm.value.adresse
-    }
-    
-    localStorage.setItem('user', JSON.stringify(updatedUser))
-    user.value = {
-      id: updatedUser.id ?? user.value?.id ?? 0,
-      firstName: updatedUser.firstName ?? profileForm.value.prenom,
-      lastName: updatedUser.lastName ?? profileForm.value.nom,
-      email: updatedUser.email ?? profileForm.value.email,
-      password: updatedUser.password ?? user.value?.password ?? '',
-      phone: updatedUser.phone ?? profileForm.value.telephone,
+    // Mettre à jour le store utilisateur
+    const updatedUser: Client = {
+      ...userStore.user,
+      id: userStore.user?.id ?? 0,
+      firstName: profileForm.value.prenom,
+      lastName: profileForm.value.nom,
+      email: profileForm.value.email,
+      phone: profileForm.value.telephone,
       address: {
-        street: updatedUser.address?.street ?? profileForm.value.adresse.rue,
-        postalCode: updatedUser.address?.postalCode ?? profileForm.value.adresse.codePostal,
-        city: updatedUser.address?.city ?? profileForm.value.adresse.ville
+        street: profileForm.value.adresse.rue,
+        postalCode: profileForm.value.adresse.codePostal,
+        city: profileForm.value.adresse.ville
       },
-      registrationDate: updatedUser.registrationDate ?? user.value?.registrationDate ?? '',
-      orders: updatedUser.orders ?? user.value?.orders ?? [],
-      image: updatedUser.image ?? user.value?.image,
-      description: updatedUser.description ?? user.value?.description
+      registrationDate: userStore.user?.registrationDate ?? '',
+      orders: userStore.user?.orders ?? [],
+      image: userStore.user?.image,
+      description: userStore.user?.description
     }
-    
+    userStore.user = updatedUser
     message.value = 'Profil mis à jour avec succès !'
     messageType.value = 'success'
-    
     setTimeout(() => {
       message.value = ''
     }, 3000)
-    
   } catch (error) {
     message.value = 'Erreur lors de la sauvegarde'
     messageType.value = 'error'
