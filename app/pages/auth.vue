@@ -2,7 +2,7 @@
   <div class="auth-layout">
     <div class="auth-container">
       <div class="auth-header">
-        <h1>🍽️ UberEats</h1>
+        <h1>🍽️ FastEat</h1>
         <p>Connectez-vous pour commander</p>
       </div>
 

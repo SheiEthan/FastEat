@@ -77,9 +77,9 @@
               <div class="d-flex align-items-center gap-3 mb-4">
                 <label for="quantity" class="form-label mb-0">Quantité :</label>
                 <div class="quantity-controls">
-                  <button @click="decrementQuantity" :disabled="quantity <= 1" class="btn btn-outline-success rounded-circle" style="width:32px;height:32px;">−</button>
+                  <button @click="decrementQuantity" :disabled="quantity <= 1" class="btn btn-outline-success rounded-circle p-0" style="width:32px;height:32px;">−</button>
                   <span class="mx-2 fw-bold">{{ quantity }}</span>
-                  <button @click="incrementQuantity" class="btn btn-success rounded-circle" style="width:32px;height:32px;">+</button>
+                  <button @click="incrementQuantity" class="btn btn-success rounded-circle p-0" style="width:32px;height:32px;">+</button>
                 </div>
               </div>
               

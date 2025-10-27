@@ -14,7 +14,7 @@ const props = defineProps<{ message: string; visible: boolean }>()
 .toast-notification {
   position: fixed;
   right: 2rem;
-  bottom: 2rem;
+  bottom: 5.5rem;
   background: #27ae60;
   color: #fff;
   padding: 1rem 2rem;

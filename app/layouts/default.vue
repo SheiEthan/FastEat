@@ -12,10 +12,7 @@
             <NuxtLink to="/restaurants" class="mx-3"><i class="bi bi-house"></i> Restaurants</NuxtLink>
             <NuxtLink to="/profil" class="mx-3"><i class="bi bi-person"></i> Mon Profil</NuxtLink>
             <NuxtLink to="/order" class="mx-3"><i class="bi bi-arrow-counterclockwise"></i> Mes Commandes</NuxtLink>
-            <NuxtLink to="/cart" class="mx-3 cart-link">
-              <i class="bi bi-cart"></i>
-              <span v-if="cartStore.dishes.length > 0" class="cart-badge">{{ cartStore.dishes.length }}</span>
-            </NuxtLink>
+            <!-- Panier retiré de la navbar, affiché en popup -->
             
             <!-- Info utilisateur et déconnexion -->
             <div class="mx-3 user-info d-flex align-items-center">
@@ -29,12 +26,13 @@
     </nav>
   <div class="main">
     <slot />
+    <CartPopup />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCartListStore } from '~/stores/cart/cartListStore'
-
+import CartPopup from '~/components/CartPopup.vue'
 const cartStore = useCartListStore()
 const user = ref<any>(null)
 
