@@ -22,7 +22,7 @@
           Inscription
         </button>
       </div>
-
+      <!-- Test -->
       <!-- Formulaire de connexion -->
       <div v-if="currentTab === 'login'" class="auth-form">
         <h2>Se connecter</h2>
