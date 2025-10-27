@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "firstName": "Jean",
+    "lastName": "Dupont",
+    "email": "jean@client.com",
+    "password": "password123",
+    "phone": "0123456789",
+    "address": {
+      "street": "15 rue de la Paix",
+      "postalCode": "75001",
+      "city": "Paris"
+    },
+    "registrationDate": "2024-01-15T10:30:00Z",
+    "orders": []
+  },
+  {
+    "id": 2,
+    "firstName": "Marie",
+    "lastName": "Martin",
+    "email": "marie@client.com",
+    "password": "password123",
+    "phone": "0234567890",
+    "address": {
+      "street": "42 avenue des Champs",
+      "postalCode": "75008",
+      "city": "Paris"
+    },
+    "registrationDate": "2024-02-10T14:20:00Z",
+    "orders": []
+  },
+  {
+    "id": 3,
+    "firstName": "Pierre",
+    "lastName": "Durand",
+    "email": "pierre@client.com",
+    "password": "password123",
+    "phone": "0345678901",
+    "address": {
+      "street": "8 boulevard Saint-Germain",
+      "postalCode": "75005",
+      "city": "Paris"
+    },
+    "registrationDate": "2024-03-05T09:15:00Z",
+    "orders": []
+  },
+  {
+    "id": 4,
+    "firstName": "Sophie",
+    "lastName": "Bernard",
+    "email": "sophie@client.com",
+    "password": "password123",
+    "phone": "0456789012",
+    "address": {
+      "street": "23 rue du Commerce",
+      "postalCode": "69001",
+      "city": "Lyon"
+    },
+    "registrationDate": "2024-03-12T16:45:00Z",
+    "orders": []
+  },
+  {
+    "id": 5,
+    "firstName": "Lucas",
+    "lastName": "Petit",
+    "email": "lucas@client.com",
+    "password": "password123",
+    "phone": "0567890123",
+    "address": {
+      "street": "67 cours Mirabeau",
+      "postalCode": "13100",
+      "city": "Aix-en-Provence"
+    },
+    "registrationDate": "2024-04-01T11:30:00Z",
+    "orders": []
+  },
+  {
+    "id": 6,
+    "firstName": "Emma",
+    "lastName": "Moreau",
+    "email": "emma@client.com",
+    "password": "password123",
+    "phone": "0678901234",
+    "address": {
+      "street": "12 place Bellecour",
+      "postalCode": "69002",
+      "city": "Lyon"
+    },
+    "registrationDate": "2024-04-18T13:20:00Z",
+    "orders": []
+  },
+  {
+    "id": 7,
+    "firstName": "Thomas",
+    "lastName": "Leroy",
+    "email": "thomas@client.com",
+    "password": "password123",
+    "phone": "0789012345",
+    "address": {
+      "street": "89 rue de la République",
+      "postalCode": "13001",
+      "city": "Marseille"
+    },
+    "registrationDate": "2024-05-03T08:45:00Z",
+    "orders": []
+  },
+  {
+    "id": 8,
+    "firstName": "Léa",
+    "lastName": "Roux",
+    "email": "lea@client.com",
+    "password": "password123",
+    "phone": "0890123456",
+    "address": {
+      "street": "34 avenue Victor Hugo",
+      "postalCode": "75016",
+      "city": "Paris"
+    },
+    "registrationDate": "2024-05-20T15:10:00Z",
+    "orders": []
+  }
+]

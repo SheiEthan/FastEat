@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "Le Clos des Sens",
+    "description": "Restaurant gastronomique végétal & lacustre 3 étoiles Michelin à Annecy-Le-Vieux. Cuisine créative avec produits du potager, poissons de lac, philosophie locavore et mets raffinés.",
+    "city": "Annecy-Le-Vieux",
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+    "street": "13 Rue Jean Mermoz",
+    "postalCode": "74940"
+  },
+  {
+    "id": 2,
+    "name": "L'Auberge du Père Bise - Jean Sulpice",
+    "description": "Étoilé Michelin (2 étoiles) à Talloires-Montmin, cette auberge au bord du lac propose une haute cuisine alpine, respectueuse des saisons, avec vue sur le lac, hôtel spa, terrasses et cadre naturel exceptionnel.",
+    "city": "Talloires-Montmin",
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+    "street": "303 Route du Port",
+    "postalCode": "74290"
+  },
+  {
+    "id": 3,
+    "name": "Les Tilleuls",
+    "description": "Restaurant familial à Saint-Jorioz spécialisé dans les poissons sauvages du lac d'Annecy. Cuisine traditionnelle savoyarde, maison, copieuse, avec véranda ou terrasse.",
+    "city": "Saint-Jorioz",
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+    "street": "2 Avenue d'Albigny",
+    "postalCode": "74410"
+  }
+]

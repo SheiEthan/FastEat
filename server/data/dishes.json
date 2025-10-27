@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "name": "Menu Dégustation Végétal",
+    "description": "7 services créatifs autour des légumes du potager et des produits lacustres",
+    "price": 195,
+    "category": "Menu",
+    "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 2,
+    "name": "Omble Chevalier du Lac",
+    "description": "Poisson noble du lac d'Annecy, légumes de saison, émulsion d'herbes lacustres",
+    "price": 48,
+    "category": "Poisson",
+    "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 3,
+    "name": "Légumes du Potager",
+    "description": "Composition artistique de légumes bio du jardin, vinaigrette aux herbes",
+    "price": 35,
+    "category": "Végétarien",
+    "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 4,
+    "name": "Tartare de Truite Fumée",
+    "description": "Truite fumée maison, avocat, citron vert, pain de seigle grillé",
+    "price": 26,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 5,
+    "name": "Menu Alpage",
+    "description": "Voyage culinaire en altitude, produits alpins et techniques modernes",
+    "price": 165,
+    "category": "Menu",
+    "image": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 6,
+    "name": "Agneau des Bauges",
+    "description": "Épaule confite, jus aux herbes de montagne, légumes oubliés",
+    "price": 42,
+    "category": "Viande",
+    "image": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 7,
+    "name": "Fera du Lac d'Annecy",
+    "description": "Poisson emblématique en croûte d'herbes, beurre blanc au vin de Savoie",
+    "price": 38,
+    "category": "Poisson",
+    "image": "https://images.unsplash.com/photo-1535473895227-bdab97e5d1b3?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 8,
+    "name": "Foie Gras Poêlé",
+    "description": "Foie gras du Périgord, compotée de figues, pain d'épices",
+    "price": 32,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 9,
+    "name": "Filets de Perche du Lac",
+    "description": "Spécialité maison, filets meunière, pommes de terre grenaille",
+    "price": 22,
+    "category": "Poisson",
+    "image": "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 10,
+    "name": "Fondue Savoyarde",
+    "description": "Fromages locaux (Beaufort, Comté, Emmental), pain de campagne",
+    "price": 18,
+    "category": "Spécialité",
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 11,
+    "name": "Tartiflette Traditionnelle",
+    "description": "Pommes de terre, lardons, oignons, reblochon fermier",
+    "price": 16,
+    "category": "Spécialité",
+    "image": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 12,
+    "name": "Raclette du Pays",
+    "description": "Fromage de Savoie fondu, charcuterie locale, pommes de terre",
+    "price": 19,
+    "category": "Spécialité",
+    "image": "https://images.unsplash.com/photo-1544454404-80ad7d34ac95?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 13,
+    "name": "Risotto aux Cèpes",
+    "description": "Riz Carnaroli, cèpes de nos forêts, parmesan 24 mois, truffe noire",
+    "price": 28,
+    "category": "Végétarien",
+    "image": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 14,
+    "name": "Saumon Gravlax",
+    "description": "Saumon mariné aux herbes nordiques, blinis, crème aigre",
+    "price": 24,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 15,
+    "name": "Côte de Bœuf aux Morilles",
+    "description": "Pièce de bœuf de 400g, sauce aux morilles, gratin dauphinois",
+    "price": 45,
+    "category": "Viande",
+    "image": "https://images.unsplash.com/photo-1558030006-450675393462?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 16,
+    "name": "Salade de Chèvre Chaud",
+    "description": "Mesclun, crottin de chèvre grillé, noix, miel de montagne",
+    "price": 14,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 17,
+    "name": "Escalope de Veau à la Crème",
+    "description": "Escalope de veau des Alpes, champignons des bois, crème fraîche",
+    "price": 26,
+    "category": "Viande",
+    "image": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 18,
+    "name": "Soupe à l'Oignon Gratinée",
+    "description": "Oignons confits, bouillon de bœuf, croûtons, gruyère fondu",
+    "price": 12,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 19,
+    "name": "Crème Brûlée à la Vanille",
+    "description": "Dessert traditionnel, vanille de Madagascar, sucre caramélisé",
+    "price": 9,
+    "category": "Dessert",
+    "image": "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 20,
+    "name": "Tarte Tatin aux Pommes",
+    "description": "Pommes caramélisées, pâte feuilletée, glace vanille",
+    "price": 11,
+    "category": "Dessert",
+    "image": "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 21,
+    "name": "Mousse au Chocolat Maison",
+    "description": "Chocolat noir 70%, chantilly, copeaux de chocolat",
+    "price": 8,
+    "category": "Dessert",
+    "image": "https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  },
+  {
+    "id": 22,
+    "name": "Café Gourmand",
+    "description": "Expresso et mini desserts de la maison",
+    "price": 7,
+    "category": "Dessert",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 23,
+    "name": "Carpaccio de Bœuf",
+    "description": "Fines lamelles de bœuf, roquette, parmesan, huile de truffe",
+    "price": 22,
+    "category": "Entrée",
+    "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 2
+  },
+  {
+    "id": 24,
+    "name": "Magret de Canard au Miel",
+    "description": "Magret grillé, sauce au miel et thym, légumes de saison",
+    "price": 29,
+    "category": "Viande",
+    "image": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 1
+  },
+  {
+    "id": 25,
+    "name": "Plateau de Fromages",
+    "description": "Sélection de fromages de Savoie, confiture de figues, noix",
+    "price": 16,
+    "category": "Fromage",
+    "image": "https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=400&auto=format&fit=crop",
+    "restaurantId": 3
+  }
+]

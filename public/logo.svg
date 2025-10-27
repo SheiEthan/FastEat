@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#00C853" stroke-width="8"/>
+  <path d="M60 120c0-20 15-35 35-35h10c20 0 35 15 35 35v10H60v-10z" fill="#00C853"/>
+  <rect x="80" y="70" width="40" height="25" rx="5" fill="#00C853"/>
+  <text x="100" y="165" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="#00C853">FastEat</text>
+</svg>

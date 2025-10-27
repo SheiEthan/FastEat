@@ -1,0 +1,22 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+
+  css: [
+    'bootstrap/dist/css/bootstrap.min.css',
+    'bootstrap-icons/font/bootstrap-icons.css',
+  ],
+
+  modules: ['@pinia/nuxt','pinia-plugin-persistedstate/nuxt'],
+    app: {
+      head: {
+        title: 'FastEat',
+        meta: [
+          { name: 'description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
+          { property: 'og:title', content: 'FastEat' },
+          { property: 'og:description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
+          { property: 'og:type', content: 'website' }
+        ]
+      }
+    },

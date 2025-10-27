@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "restaurantId": 1,
+    "items": [
+      {
+        "id": 1,
+        "name": "Coq au Vin",
+        "price": 18.50,
+        "quantity": 2
+      },
+      {
+        "id": 2,
+        "name": "Bouillabaisse",
+        "price": 22.00,
+        "quantity": 1
+      }
+    ],
+    "total": 59.00,
+    "date": "2025-10-27T10:30:00.000Z",
+    "status": "pending"
+  },
+  {
+    "id": 2,
+    "restaurantId": 2,
+    "items": [
+      {
+        "id": 3,
+        "name": "Pizza Margherita",
+        "price": 12.50,
+        "quantity": 2
+      },
+      {
+        "id": 5,
+        "name": "Tiramisu",
+        "price": 7.50,
+        "quantity": 1
+      }
+    ],
+    "total": 32.50,
+    "date": "2025-10-27T11:15:00.000Z",
+    "status": "confirmed"
+  },
+  {
+    "id": 3,
+    "restaurantId": 1,
+    "items": [
+      {
+        "id": 2,
+        "name": "Bouillabaisse",
+        "price": 22.00,
+        "quantity": 1
+      }
+    ],
+    "total": 22.00,
+    "date": "2025-10-27T12:00:00.000Z",
+    "status": "ready"
+  }
+]
