@@ -1,12 +1,12 @@
 <template>
   <div class="page-orders">
     <div class="container">
-      <h1>📦 Mes Commandes</h1>
+      <h1>📦 {{ $t('my_orders') }}</h1>
       
       <div v-if="orderStore.orders.length === 0" class="no-orders">
-        <p>Aucune commande pour le moment</p>
+        <p>{{ $t('no_orders') }}</p>
         <NuxtLink to="/restaurants" class="btn btn-primary">
-          Découvrir les restaurants
+          {{ $t('discover_restaurants_btn') }}
         </NuxtLink>
       </div>
       

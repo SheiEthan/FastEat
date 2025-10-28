@@ -29,7 +29,7 @@
           <div class="col-lg-6">
             <div class="position-relative">
               <img class="img-fluid rounded-3 shadow-lg dish-image" :src="dish?.image" :alt="dish?.name" />
-              <span class="position-absolute top-0 start-0 m-3 badge bg-light text-dark">{{ dish?.category }}</span>
+              <span class="position-absolute top-0 start-0 m-3 badge bg-light text-dark">{{ $t('category') }}: {{ dish?.category }}</span>
             </div>
           </div>
           
@@ -75,7 +75,7 @@
               </div>
 
               <div class="d-flex align-items-center gap-3 mb-4">
-                <label for="quantity" class="form-label mb-0">Quantité :</label>
+                <label for="quantity" class="form-label mb-0">{{ $t('quantity') }} :</label>
                 <div class="quantity-controls">
                   <button @click="decrementQuantity" :disabled="quantity <= 1" class="btn btn-outline-success rounded-circle p-0" style="width:32px;height:32px;">−</button>
                   <span class="mx-2 fw-bold">{{ quantity }}</span>
@@ -86,7 +86,7 @@
               <div class="d-flex gap-3 mb-3">
                 <button class="btn btn-success btn-lg rounded-pill px-4" @click="addToCart">
                   <i class="bi bi-cart-plus me-2"></i>
-                  Ajouter au panier
+                  {{ $t('add_to_cart') }}
                 </button>
                 <button class="btn btn-outline-danger rounded-circle" style="width: 48px; height: 48px;">
                   <i class="bi bi-heart"></i>
@@ -95,7 +95,7 @@
               <ToastNotification :message="toastMessage" :visible="showToast" />
               
               <NuxtLink :to="`/restaurants/${restaurantSlugComputed}`" class="text-muted text-decoration-none">
-                <i class="bi bi-arrow-left me-1"></i> Retour au restaurant
+                <i class="bi bi-arrow-left me-1"></i> {{ $t('back_to_restaurant') }}
               </NuxtLink>
             </div>
           </div>
@@ -129,7 +129,7 @@
                 </div>
               </div>
               <NuxtLink :to="`/restaurants/${restaurantSlugComputed}`" class="btn btn-primary">
-                Voir le restaurant
+                {{ $t('view_restaurant') }}
               </NuxtLink>
             </div>
           </div>

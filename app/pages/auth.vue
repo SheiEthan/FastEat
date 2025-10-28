@@ -3,7 +3,7 @@
     <div class="auth-container">
       <div class="auth-header">
         <h1>🍽️ FastEat</h1>
-        <p>Connectez-vous pour commander</p>
+        <p>{{ $t('connect_to_order') }}</p>
       </div>
 
       <div class="auth-tabs">

@@ -205,7 +205,8 @@
 <script setup lang="ts">
 // Page restaurateur protégée par middleware global
 definePageMeta({
-  layout: 'bo'
+  layout: 'bo',
+  middleware: 'bo-auth-global-client'
 })
 
 import { ref, onMounted, computed } from 'vue'

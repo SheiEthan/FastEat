@@ -19,7 +19,8 @@
 <script setup lang="ts">
 // Utiliser le layout BO
 definePageMeta({
-  layout: 'bo'
+  layout: 'bo',
+  middleware: 'bo-auth-global-client'
 })
 
 import { ref } from 'vue'

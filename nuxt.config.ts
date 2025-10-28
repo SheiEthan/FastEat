@@ -8,16 +8,27 @@ export default defineNuxtConfig({
     'bootstrap-icons/font/bootstrap-icons.css',
   ],
 
-  modules: ['@pinia/nuxt','pinia-plugin-persistedstate/nuxt'],
-    app: {
-      head: {
-        title: 'FastEat',
-        meta: [
-          { name: 'description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
-          { property: 'og:title', content: 'FastEat' },
-          { property: 'og:description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
-          { property: 'og:type', content: 'website' }
-        ]
-      }
+  modules: ['@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt', '@nuxtjs/i18n'],
+
+  i18n: {
+    defaultLocale: 'fr',
+    locales: [
+      { code: 'fr', name: 'Français', file: 'fr.json' },
+      { code: 'en', name: 'English', file: 'en.json' }
+    ],
+    strategy: 'no_prefix',
+    langDir: 'locales/',
+  },
+
+  app: {
+    head: {
+      title: 'FastEat',
+      meta: [
+        { name: 'description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
+        { property: 'og:title', content: 'FastEat' },
+        { property: 'og:description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
+        { property: 'og:type', content: 'website' }
+      ]
+    }
   }
 });

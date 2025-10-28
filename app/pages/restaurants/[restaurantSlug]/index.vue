@@ -54,14 +54,14 @@ if (!restaurant.value) {
     <div class="dishes-section">
       <div class="container">
         <div class="section-header">
-          <h2>🍽️ Notre Carte</h2>
-          <p>Découvrez tous nos délicieux plats</p>
+          <h2>🍽️ {{ $t('restaurant_menu') }}</h2>
+          <p>{{ $t('discover_dishes') }}</p>
         </div>
 
         <div v-if="restaurantDishes.length === 0" class="no-dishes">
           <div class="no-dishes-icon">🍽️</div>
-          <h3>Aucun plat disponible</h3>
-          <p>Ce restaurant met à jour sa carte régulièrement</p>
+          <h3>{{ $t('no_dishes_available') }}</h3>
+          <p>{{ $t('restaurant_updates_menu') }}</p>
         </div>
 
         <div v-else class="dishes-grid row g-3">

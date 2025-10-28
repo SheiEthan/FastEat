@@ -1,0 +1,14 @@
+{
+  "welcome": "Bienvenue sur FastEat",
+  "restaurants": "Restaurants",
+  "profile": "Mon Profil",
+  "orders": "Mes Commandes",
+  "cart": "Panier",
+  "logout": "Déconnexion",
+  "login": "Connexion",
+  "register": "Inscription",
+  "email": "Email",
+  "password": "Mot de passe",
+  "home": "Accueil",
+  "loading": "Chargement..."
+}

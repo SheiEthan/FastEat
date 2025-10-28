@@ -1,40 +1,26 @@
-import HeroSection from '@/components/HeroSection.vue'
-import BaseButton from '@/components/BaseButton.vue'
-import FeatureItem from '@/components/FeatureItem.vue'
-
-definePageMeta({
-  title: 'UberEat - Accueil',
-  meta: [
-    { name: 'description', content: 'Découvrez les meilleurs restaurants près de chez vous et commandez en quelques clics !' },
-    { property: 'og:title', content: 'UberEat - Accueil' },
-    { property: 'og:description', content: 'Découvrez les meilleurs restaurants près de chez vous et commandez en quelques clics !' },
-    { property: 'og:image', content: '/favicon.ico' },
-    { property: 'og:type', content: 'website' }
-  ]
-})
 <template>
   <HeroSection>
-    <template #title>🍽️ Bienvenue sur UberEat</template>
-    <template #subtitle>Découvrez les meilleurs restaurants près de chez vous et commandez en quelques clics !</template>
+    <template #title>{{ $t('welcome') }}</template>
+  <template #subtitle>{{ $t('homepage_subtitle') }}</template>
     <template #actions>
       <NuxtLink to="/restaurants">
         <BaseButton size="lg">
-          🏪 Découvrir nos restaurants
+          {{ $t('discover_restaurants_btn') }}
         </BaseButton>
       </NuxtLink>
     </template>
     <template #features>
       <FeatureItem>
         <template #icon>⚡</template>
-        Livraison rapide
+        {{ $t('fast_delivery') }}
       </FeatureItem>
       <FeatureItem>
         <template #icon>🎯</template>
-        Large sélection
+        {{ $t('large_selection') }}
       </FeatureItem>
       <FeatureItem>
         <template #icon>💳</template>
-        Paiement sécurisé
+        {{ $t('secure_payment_feature') }}
       </FeatureItem>
     </template>
   </HeroSection>

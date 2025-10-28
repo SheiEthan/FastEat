@@ -9,6 +9,7 @@ definePageMeta({
   ]
 })
 import { useRestaurantStore } from '~/stores/restaurant/restaurantStore'
+
 const restaurantStore = useRestaurantStore()
 const { data: restaurants } = await useAsyncData("restaurants", () => $fetch("/api/restaurants"))
 restaurantStore.setRestaurants(restaurants.value || [])
@@ -26,27 +27,27 @@ const filteredRestaurants = computed(() => {
     <div class="restaurants-header">
       <div class="container">
         <div class="header-content">
-          <h1>🍽️ Découvrez nos Restaurants</h1>
-          <p>Explorez une sélection de restaurants exceptionnels près de chez vous</p>
+          <h1>{{ $t('discover_restaurants') }}</h1>
+          <p>{{ $t('explore_restaurants_near_you') }}</p>
           <div class="header-stats">
             <div class="stat-item">
               <span class="stat-number">{{ restaurantStore.restaurants.length }}</span>
-              <span class="stat-label">Restaurants</span>
+              <span class="stat-label">{{ $t('restaurants_count') }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">25-35</span>
-              <span class="stat-label">min de livraison</span>
+              <span class="stat-label">{{ $t('delivery_min') }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">4.5</span>
-              <span class="stat-label">⭐ Note moyenne</span>
+              <span class="stat-label">{{ $t('average_rating') }}</span>
             </div>
           </div>
           <input
             v-model="restaurantStore.searchQuery"
             type="text"
             class="form-control search-bar"
-            placeholder="Rechercher un restaurant..."
+            :placeholder="$t('search_placeholder')"
           />
         </div>
       </div>
@@ -57,8 +58,8 @@ const filteredRestaurants = computed(() => {
       <div class="container">
   <div v-if="restaurantStore.restaurants.length === 0" class="no-restaurants">
           <div class="no-restaurants-icon">🏪</div>
-          <h3>Aucun restaurant disponible</h3>
-          <p>Nous ajoutons régulièrement de nouveaux restaurants à notre plateforme</p>
+          <h3>{{ $t('no_restaurants_available') }}</h3>
+          <p>{{ $t('adding_new_restaurants') }}</p>
         </div>
 
         <div v-else class="row g-3">

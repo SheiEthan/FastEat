@@ -4,17 +4,17 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-header">
-            <h3 class="text-center">Mon Profil</h3>
+            <h3 class="text-center">{{ $t('my_profile') }}</h3>
           </div>
           <div class="card-body">
             <div v-if="!userStore.user" class="text-center">
-              <p>Chargement des informations...</p>
+              <p>{{ $t('loading') }}</p>
             </div>
             
             <form v-else @submit.prevent="updateProfile">
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="prenom" class="form-label">Prénom</label>
+                  <label for="prenom" class="form-label">{{ $t('first_name') }}</label>
                   <input 
                     type="text" 
                     class="form-control" 
@@ -24,7 +24,7 @@
                   />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="nom" class="form-label">Nom</label>
+                  <label for="nom" class="form-label">{{ $t('last_name') }}</label>
                   <input 
                     type="text" 
                     class="form-control" 
@@ -36,7 +36,7 @@
               </div>
               
               <div class="mb-3">
-                <label for="email" class="form-label">Adresse email</label>
+                <label for="email" class="form-label">{{ $t('email') }}</label>
                 <input 
                   type="email" 
                   class="form-control" 
@@ -45,27 +45,27 @@
                   placeholder="Entrez votre email"
                   readonly
                 />
-                <small class="text-muted">L'email ne peut pas être modifié</small>
+                <small class="text-muted">{{ $t('email_not_editable') }}</small>
               </div>
               
               <div class="mb-3">
-                <label for="telephone" class="form-label">Téléphone</label>
+                <label for="telephone" class="form-label">{{ $t('phone') }}</label>
                 <input 
                   type="tel" 
                   class="form-control" 
                   id="telephone" 
                   v-model="profileForm.telephone"
-                  placeholder="Entrez votre numéro de téléphone"
+                  :placeholder="$t('enter_phone')"
                 />
               </div>
               
               <div class="mb-3">
-                <label class="form-label">Adresse</label>
+                <label class="form-label">{{ $t('address') }}</label>
                 <input 
                   type="text" 
                   class="form-control mb-2" 
                   v-model="profileForm.adresse.rue"
-                  placeholder="Rue"
+                  :placeholder="$t('street')"
                 />
                 <div class="row">
                   <div class="col-4">
@@ -73,7 +73,7 @@
                       type="text" 
                       class="form-control" 
                       v-model="profileForm.adresse.codePostal"
-                      placeholder="Code postal"
+                      :placeholder="$t('postal_code')"
                     />
                   </div>
                   <div class="col-8">
@@ -81,7 +81,7 @@
                       type="text" 
                       class="form-control" 
                       v-model="profileForm.adresse.ville"
-                      placeholder="Ville"
+                      :placeholder="$t('city')"
                     />
                   </div>
                 </div>
@@ -89,13 +89,13 @@
               
               <div class="mb-3">
                 <small class="text-muted">
-                  Membre depuis le {{ formatDate(userStore.user?.registrationDate) }}
+                  {{ $t('member_since') }} {{ formatDate(userStore.user?.registrationDate) }}
                 </small>
               </div>
               
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary" :disabled="isLoading">
-                  {{ isLoading ? 'Sauvegarde...' : 'Sauvegarder' }}
+                  {{ isLoading ? $t('loading') : $t('save_changes') }}
                 </button>
               </div>
               
@@ -124,6 +124,7 @@ definePageMeta({
 import type { Client } from '~/modules/client/types'
 import { useUserStore } from '~/stores/user/userStore'
 import { onMounted, ref } from 'vue'
+
 const userStore = useUserStore()
 const isLoading = ref(false)
 const message = ref('')

@@ -1,3 +1,16 @@
+// ================================
+// VARIABLES PRINCIPALES
+// ================================
+$color-green-main: #27ae60;
+$color-green-alt: #2ecc71;
+$color-green-dark: #219a52;
+$color-green-darker: #1e8548;
+$color-grey-bg: #f5f7fa;
+$color-grey-alt: #c3cfe2;
+$color-shadow: 0 6px 18.5px 2.5px #dddddd;
+$color-shadow-card: 0 10px 30px rgba(0,0,0,0.1);
+$color-shadow-btn: 0 8px 25px rgba(39, 174, 96, 0.2);
+
 /* ================================
    STYLES GLOBAUX
    ================================ */
@@ -7,7 +20,7 @@ body {
 }
 
 .main {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, $color-grey-bg 0%, $color-grey-alt 100%);
   min-height: 100vh;
 }
 
@@ -20,7 +33,7 @@ body {
    ================================ */
 
 .navbar {
-  box-shadow: 0 6px 18.5px 2.5px #dddddd;
+  box-shadow: $color-shadow;
   
   .logo {
     img {
@@ -42,7 +55,7 @@ body {
       position: absolute;
       top: -5px;
       right: -8px;
-      background: #27ae60;
+  background: $color-green-main;
       color: white;
       border-radius: 50%;
       width: 15px;
@@ -71,14 +84,14 @@ body {
    ================================ */
 
 .btn-primary {
-  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
   border: none;
   transition: transform 0.2s;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #219a52 0%, #1e8548 100%);
+  background: linear-gradient(135deg, $color-green-dark 0%, $color-green-darker 100%);
 }
 
 .btn:hover {
@@ -143,7 +156,7 @@ body {
 
 .auth-layout {
   min-height: 100vh;
-  background: linear-gradient(135deg, #27ae60 0%, #b2f7c1 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, #b2f7c1 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,7 +210,7 @@ body {
 
 .tab-btn.active {
   background: white;
-  color: #27ae60;
+  color: $color-green-main;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -235,8 +248,8 @@ body {
 
 .form-control:focus {
   outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+  border-color: $color-green-main;
+  box-shadow: 0 0 0 3px rgba($color-green-main, 0.1);
 }
 
 .btn {
@@ -257,7 +270,7 @@ body {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(39, 174, 96, 0.2);
+  box-shadow: $color-shadow-btn;
 }
 
 .btn:disabled {
@@ -355,7 +368,7 @@ body {
   }
 
   .restaurant-header {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
     color: white;
     padding: 1.5rem 2rem;
     display: flex;
@@ -475,7 +488,7 @@ body {
       height: 30px;
       border-radius: 50%;
       border: none;
-      background: #27ae60;
+  background: $color-green-main;
       color: white;
       display: flex;
       align-items: center;
@@ -484,7 +497,7 @@ body {
       transition: all 0.2s;
 
       &:hover {
-        background: #219a52;
+  background: $color-green-dark;
         transform: scale(1.1);
       }
 
@@ -513,7 +526,7 @@ body {
     top: 2rem;
 
     .checkout-header {
-      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
       color: white;
       padding: 1.5rem 2rem;
       text-align: center;
@@ -551,7 +564,7 @@ body {
 
     .btn-checkout {
       width: 100%;
-      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
       color: white;
       border: none;
       padding: 1rem;
@@ -567,7 +580,7 @@ body {
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+  box-shadow: $color-shadow-btn;
       }
 
       &:disabled {
@@ -718,7 +731,7 @@ body {
   }
 
   .order-header {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
     color: white;
     padding: 1.5rem 2rem;
     display: flex;
@@ -776,7 +789,7 @@ body {
       }
 
       .item-price {
-        color: #27ae60;
+  color: $color-green-main;
         font-weight: bold;
         font-size: 1.1rem;
       }
@@ -823,7 +836,7 @@ body {
 
 .page-restaurants-index {
   .restaurants-header {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
     color: white;
     padding: 4rem 0;
     text-align: center;
@@ -1124,8 +1137,8 @@ body {
   }
 
   .form-control:focus {
-    border-color: #27ae60;
-    box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+  border-color: $color-green-main;
+  box-shadow: 0 0 0 0.2rem rgba($color-green-main, 0.25);
   }
 
   .btn-outline-secondary {
@@ -1435,8 +1448,8 @@ body {
   cursor: pointer;
 
   &:hover, &:focus {
-    background: rgba(39, 174, 96, 0.12);
-    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15);
+    background: rgba($color-green-main, 0.12);
+    box-shadow: 0 2px 8px rgba($color-green-main, 0.15);
     transform: scale(1.08);
   }
 
@@ -1451,8 +1464,8 @@ body {
 
 .btn-primary.btn-lg {
   background: #fff;
-  color: #27ae60;
-  border: 2px solid #27ae60;
+  color: $color-green-main;
+  border: 2px solid $color-green-main;
   box-shadow: 0 4px 16px rgba(39, 174, 96, 0.10);
   padding: 1rem 2.5rem;
   font-size: 1.25rem;
@@ -1464,7 +1477,7 @@ body {
 }
 
 .btn-primary.btn-lg:hover {
-  background: #27ae60;
+  background: $color-green-main;
   color: #fff;
   box-shadow: 0 8px 32px rgba(39, 174, 96, 0.18);
 }

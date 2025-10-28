@@ -112,7 +112,8 @@
 <script setup lang="ts">
 // Page admin protégée par middleware global
 definePageMeta({
-  layout: 'bo'
+  layout: 'bo',
+  middleware: 'bo-auth-global-client'
 })
 
 import { ref, onMounted } from 'vue'

@@ -15,7 +15,7 @@
           @click="addCart"
           class="btn btn-primary"
           >
-          Ajouter au panier
+          {{ $t('add_to_cart') }}
       </button>
       <ToastNotification :message="toastMessage" :visible="showToast" />
     </div>

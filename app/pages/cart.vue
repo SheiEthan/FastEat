@@ -1,15 +1,15 @@
 <template>
   <div class="cart-container">
     <div class="container-fluid">
-      <h1 class="cart-title">Votre Panier</h1>
+      <h1 class="cart-title">{{ $t('your_cart') }}</h1>
       
       <!-- Panier vide -->
       <div v-if="cartListStore.dishes.length === 0" class="empty-cart">
         <div class="empty-cart-icon">🍽️</div>
-        <h3>Votre panier est vide</h3>
-        <p>Ajoutez des délicieux plats pour commencer votre commande</p>
+        <h3>{{ $t('cart_empty') }}</h3>
+        <p>{{ $t('add_dishes') }}</p>
         <NuxtLink to="/restaurants" class="btn btn-primary">
-          Découvrir les restaurants
+          {{ $t('discover_restaurants_btn') }}
         </NuxtLink>
       </div>
 
@@ -25,7 +25,7 @@
             >
               <div class="restaurant-header">
                 <h3>{{ restaurant.name }}</h3>
-                <span class="dish-count">{{ restaurant.dishes.length }} plat(s)</span>
+                <span class="dish-count">{{ restaurant.dishes.length }} {{ $t('dishes_count') }}</span>
               </div>
               
               <div class="dishes-list">
@@ -60,35 +60,35 @@
         <!-- Colonne droite: Récapitulatif et checkout -->
         <div class="col-lg-4">
           <div class="checkout-card p-4">
-            <h3>Récapitulatif</h3>
+            <h3>{{ $t('summary') }}</h3>
             
             <div class="order-summary">
               <div class="summary-line">
-                <span>Sous-total ({{ totalItems }} plats)</span>
+                <span>{{ $t('subtotal') }} ({{ totalItems }} {{ $t('dishes') }})</span>
                 <span>{{ subtotal }}€</span>
               </div>
               <div class="summary-line">
-                <span>Frais de livraison</span>
+                <span>{{ $t('delivery_fees') }}</span>
                 <span>3.99€</span>
               </div>
               <div class="summary-line">
-                <span>Frais de service</span>
+                <span>{{ $t('service_fees') }}</span>
                 <span>1.50€</span>
               </div>
               <div class="summary-line total">
                 <strong>
-                  <span>Total </span>
+                  <span>{{ $t('total') }} </span>
                   <span>{{ totalPrice }}€</span>
                 </strong>
               </div>
             </div>
 
             <button class="btn-checkout" @click="passOrder">
-              Passer la commande - {{ totalPrice }}€
+              {{ $t('place_order') }} - {{ totalPrice }}€
             </button>
             
             <div class="security-info">
-              <small>🔒 Paiement sécurisé SSL</small>
+              <small>{{ $t('secure_payment') }}</small>
             </div>
           </div>
         </div>
