@@ -27,7 +27,23 @@
 </template>
 
 <script setup lang="ts">
+import { useHead, useSeoMeta } from '@unhead/vue'
 import HeroSection from '@/components/HeroSection.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import FeatureItem from '@/components/FeatureItem.vue'
+
+useHead({
+  title: 'FastEat - Commandez vos plats préférés',
+  meta: [
+    { name: 'description', content: 'Découvrez les meilleurs restaurants et plats près de chez vous avec FastEat.' }
+  ]
+})
+
+useSeoMeta({
+  title: 'FastEat - Commandez vos plats préférés',
+  description: 'Découvrez les meilleurs restaurants et plats près de chez vous avec FastEat.',
+  ogTitle: 'FastEat - Commandez vos plats préférés',
+  ogDescription: 'Découvrez les meilleurs restaurants et plats près de chez vous avec FastEat.',
+  ogType: 'website'
+})
 </script>

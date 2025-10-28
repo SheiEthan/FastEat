@@ -33,16 +33,16 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  title: 'Mes Commandes - UberEat',
-  meta: [
-    { name: 'description', content: 'Consultez l’historique de vos commandes sur UberEat.' },
-    { property: 'og:title', content: 'Mes Commandes - UberEat' },
-    { property: 'og:description', content: 'Consultez l’historique de vos commandes sur UberEat.' },
-    { property: 'og:type', content: 'website' }
-  ]
-})
 import { useOrderStore } from '~/stores/orders/orderStore'
+import { useSeoMeta } from 'nuxt/app'
 
 const orderStore = useOrderStore()
+
+useSeoMeta({
+  title: 'Mes Commandes - FastEat',
+  description: 'Consultez l’historique de vos commandes sur FastEat.',
+  ogTitle: 'Mes Commandes - FastEat',
+  ogDescription: 'Consultez l’historique de vos commandes sur FastEat.',
+  ogType: 'website'
+})
 </script>

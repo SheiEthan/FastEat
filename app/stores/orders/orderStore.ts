@@ -1,12 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Dish } from '~/modules/dish/types'
-
-export interface Order {
-  id: number
-  date: string
-  items: Dish[]
-  total: number
-}
+import type { Order } from '~/modules/order/types'
 
 export const useOrderStore = defineStore('orders', {
   state: () => ({
@@ -20,7 +14,7 @@ export const useOrderStore = defineStore('orders', {
   actions: {
     addOrder(items: Dish[], total: number) {
       const newOrder: Order = {
-        id: Date.now(), // ID simple basé sur timestamp
+        id: Date.now(),
         date: new Date().toLocaleDateString('fr-FR', {
           day: 'numeric',
           month: 'long',
@@ -28,11 +22,18 @@ export const useOrderStore = defineStore('orders', {
           hour: '2-digit',
           minute: '2-digit'
         }),
-        items: [...items], // Copie des items
+        items: [...items],
         total: total
       }
-      
       this.orders.push(newOrder)
+    },
+
+    placeOrder(cartListStore: any, totalPrice: number) {
+      if (cartListStore.dishes.length > 0) {
+        this.addOrder(cartListStore.dishes, totalPrice)
+        cartListStore.dishes.length = 0
+        navigateTo('/order')
+      }
     }
   },
   persist: true

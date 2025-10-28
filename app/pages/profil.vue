@@ -111,19 +111,18 @@
 </template>
 
 <script setup lang="ts">
-
-definePageMeta({
-  title: 'Mon Profil - FastEat',
-  meta: [
-    { name: 'description', content: 'Gérez vos informations personnelles et votre adresse de livraison.' },
-    { property: 'og:title', content: 'Mon Profil - FastEat' },
-    { property: 'og:description', content: 'Gérez vos informations personnelles et votre adresse de livraison.' },
-    { property: 'og:type', content: 'website' }
-  ]
-})
+import { useHead, useSeoMeta } from '@unhead/vue'
 import type { Client } from '~/modules/client/types'
 import { useUserStore } from '~/stores/user/userStore'
 import { onMounted, ref } from 'vue'
+
+useSeoMeta({
+  title: 'Mon Profil - FastEat',
+  description: 'Gérez vos informations personnelles et votre adresse de livraison.',
+  ogTitle: 'Mon Profil - FastEat',
+  ogDescription: 'Gérez vos informations personnelles et votre adresse de livraison.',
+  ogType: 'website'
+})
 
 const userStore = useUserStore()
 const isLoading = ref(false)
@@ -202,7 +201,8 @@ const updateProfile = async () => {
       registrationDate: userStore.user?.registrationDate ?? '',
       orders: userStore.user?.orders ?? [],
       image: userStore.user?.image,
-      description: userStore.user?.description
+      description: userStore.user?.description,
+      password: userStore.user?.password ?? ''
     }
     userStore.user = updatedUser
     message.value = 'Profil mis à jour avec succès !'

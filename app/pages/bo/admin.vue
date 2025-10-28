@@ -67,7 +67,7 @@
             </div>
             <div class="card-body">
               <p>ID: {{ resto.id }}</p>
-              <p>Créé le: {{ formatDate(resto.createdAt || new Date()) }}</p>
+              <!-- <p>Créé le: {{ formatDate(resto.createdAt || new Date()) }}</p> -->
             </div>
             <div class="card-actions">
               <button @click="editRestaurateur(resto)" class="btn btn-secondary">
@@ -117,15 +117,9 @@ definePageMeta({
 })
 
 import { ref, onMounted } from 'vue'
+import type { User } from '~/modules/user/types'
 
-interface RestoUser {
-  id: number
-  email: string
-  role: string
-  createdAt?: Date
-}
-
-const restaurateurs = ref<RestoUser[]>([])
+const restaurateurs = ref<User[]>([])
 const newEmail = ref('')
 const newPassword = ref('')
 const error = ref('')
@@ -136,7 +130,8 @@ const fetchRestaurateurs = async () => {
   try {
     const res = await fetch('/api/bo/restaurateurs')
     const data = await res.json()
-    restaurateurs.value = data.restaurateurs || []
+    // On filtre pour ne garder que les users avec role 'restaurateur'
+    restaurateurs.value = (data.restaurateurs || []).filter((u: User) => u.role === 'restaurateur')
   } catch (e) {
     // En cas d'erreur API, utilise les données du JSON
     console.error('Erreur API, utilisation des données statiques')
@@ -149,12 +144,15 @@ onMounted(fetchRestaurateurs)
 const addRestaurateur = async () => {
   error.value = ''
   // Simuler l'ajout
-  const newId = Math.max(...restaurateurs.value.map(r => r.id)) + 1
+  const newId = restaurateurs.value.length > 0 ? Math.max(...restaurateurs.value.map(r => r.id)) + 1 : 1
   restaurateurs.value.push({
     id: newId,
     email: newEmail.value,
     role: 'restaurateur',
-    createdAt: new Date()
+    nom: '',
+    prenom: '',
+    restaurantId: 0,
+    password: ''
   })
   newEmail.value = ''
   newPassword.value = ''
@@ -170,9 +168,9 @@ const removeRestaurateur = async (id: number) => {
 
 /**
  * Modifier un restaurateur
- * @param {RestoUser} resto - Le restaurateur à modifier
+ * @param {User} resto - Le restaurateur à modifier
  */
-const editRestaurateur = (resto: RestoUser) => {
+const editRestaurateur = (resto: User) => {
   console.log('Modifier:', resto)
 }
 

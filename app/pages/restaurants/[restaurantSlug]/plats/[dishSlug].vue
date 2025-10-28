@@ -140,6 +140,9 @@
 </template>
 
 <script setup lang="ts">
+import { useSeoMeta } from 'nuxt/app'
+import { useHead } from '@unhead/vue'
+
 import type { Dish } from "~/modules/dish/types";
 import type { Restaurant } from "~/modules/restaurant/types";
 import { useCartListStore } from "~/stores/cart/cartListStore";
@@ -148,7 +151,6 @@ import { extractIdFromSlug, createRestaurantSlug } from "~/utils/slugs";
 import ToastNotification from '@/components/ToastNotification.vue'
 
 const route = useRoute();
-const router = useRouter();
 const cartListStore = useCartListStore();
 
 const restaurantSlug = route.params.restaurantSlug as string;
@@ -179,6 +181,14 @@ if (dish.value.restaurantId !== restaurant_id) {
     statusMessage: 'Ce plat ne fait pas partie de ce restaurant'
   });
 }
+
+useSeoMeta({
+  title: () => dish.value?.name ? `${dish.value.name} - FastEat` : 'Plat - FastEat',
+  description: () => dish.value?.description || 'Détail du plat sur FastEat.',
+  ogTitle: () => dish.value?.name ? `${dish.value.name} - FastEat` : 'Plat - FastEat',
+  ogDescription: () => dish.value?.description || 'Détail du plat sur FastEat.',
+  ogType: 'website'
+})
 
 const quantity = ref(1);
 const incrementQuantity = () => { quantity.value++ }

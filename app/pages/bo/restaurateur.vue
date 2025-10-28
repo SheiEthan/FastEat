@@ -182,7 +182,7 @@
               <div v-for="item in commande.items" :key="item.id" class="commande-item">
                 <span class="item-name">{{ item.name }}</span>
                 <span class="item-quantity">x{{ item.quantity }}</span>
-                <span class="item-price">{{ item.price * item.quantity }}€</span>
+                <span class="item-price">{{ item.price * (item.quantity ? item.quantity : 1) }}€</span>
               </div>
             </div>
             <div class="commande-actions">
@@ -210,42 +210,10 @@ definePageMeta({
 })
 
 import { ref, onMounted, computed } from 'vue'
-
-interface User {
-  id: number
-  email: string
-  role: 'admin' | 'restaurateur'
-  nom: string
-  prenom: string
-  restaurantId?: number
-}
-
-interface Restaurant {
-  id: number
-  name: string
-  description: string
-  city: string
-  image: string
-  street: string
-  postalCode: string
-}
-
-interface Plat {
-  id: number
-  name: string
-  price: number
-  image: string
-  restaurantId: number
-}
-
-interface Commande {
-  id: number
-  restaurantId: number
-  items: any[]
-  total: number
-  date: string
-  status: 'pending' | 'confirmed' | 'ready' | 'delivered'
-}
+import type { Restaurant } from '~/modules/restaurant/types'
+import type { Dish } from '~/modules/dish/types'
+import type { User } from '~/modules/user/types'
+import type { Commande } from '~/modules/commande/types'
 
 // État de l'application
 const currentPage = ref('restaurant')
@@ -257,7 +225,7 @@ const editingPlatId = ref<number | null>(null)
 
 // Données
 const restaurants = ref<Restaurant[]>([])
-const plats = ref<Plat[]>([])
+const plats = ref<Dish[]>([])
 const commandes = ref<Commande[]>([])
 
 // Formulaires
@@ -271,7 +239,9 @@ const restaurantForm = ref({
 const platForm = ref({
   name: '',
   image: '',
-  price: 0
+  price: 0,
+  description: '',
+  category: ''
 })
 
 // Computed
@@ -301,7 +271,7 @@ const loadData = async () => {
     if (currentUser.value?.restaurantId) {
       const platsRes = await $fetch('/api/dishes', {
         query: { restaurantId: currentUser.value.restaurantId }
-      }) as Plat[]
+      }) as Dish[]
       plats.value = platsRes
 
       // Charger les commandes pour ce restaurant
@@ -340,14 +310,22 @@ const savePlat = () => {
       plats.value[platIndex] = {
         id: existingPlat.id,
         restaurantId: existingPlat.restaurantId,
-        ...platForm.value
+        name: platForm.value.name,
+        image: platForm.value.image,
+        price: platForm.value.price,
+        description: platForm.value.description || '',
+        category: platForm.value.category || ''
       }
     }
   } else {
     // Ajouter un nouveau plat
-    const newPlat: Plat = {
+    const newPlat: Dish = {
       id: Date.now(),
-      ...platForm.value,
+      name: platForm.value.name,
+      image: platForm.value.image,
+      price: platForm.value.price,
+      description: platForm.value.description || '',
+      category: platForm.value.category || '',
       restaurantId: userRestaurant.value?.id || 0
     }
     plats.value.push(newPlat)
@@ -355,11 +333,13 @@ const savePlat = () => {
   closeModal()
 }
 
-const editPlat = (plat: Plat) => {
+const editPlat = (plat: Dish) => {
   platForm.value = {
     name: plat.name,
     price: plat.price,
-    image: plat.image
+    image: plat.image ?? '',
+    description: plat.description ?? '',
+    category: plat.category ?? ''
   }
   editingPlatId.value = plat.id
   showEditPlat.value = true
@@ -424,9 +404,8 @@ onMounted(async () => {
   if (userRestaurant.value) {
     restaurantForm.value = {
       name: userRestaurant.value.name,
-      street: userRestaurant.value.street || '',
-      postalCode: userRestaurant.value.postalCode || '',
       city: userRestaurant.value.city || ''
+      // street et postalCode ne sont pas dans le type importé, donc ignorés
     }
   }
 })

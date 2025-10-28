@@ -43,8 +43,8 @@
                   <div class="dish-actions">
                     <span class="dish-price">{{ dish.price }}</span>
                     <div class="quantity-controls">
-                      <button @click="decrementQuantity(dish)" aria-label="Diminuer la quantité" :disabled="dish.quantity <= 1">−</button>
-                      <span>{{ dish.quantity }}</span>
+                      <button @click="decrementQuantity(dish)" aria-label="Diminuer la quantité" :disabled="(dish.quantity ?? 1) <= 1">−</button>
+                      <span>{{ dish.quantity ?? 1 }}</span>
                       <button @click="incrementQuantity(dish)" aria-label="Augmenter la quantité">+</button>
                     </div>
                     <button @click="removeDish(dish)" class="btn-remove" aria-label="Retirer ce plat">
@@ -98,15 +98,17 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  title: 'Mon Panier - UberEat',
-  meta: [
-    { name: 'description', content: 'Retrouvez tous les plats ajoutés à votre panier et passez commande.' },
-    { property: 'og:title', content: 'Mon Panier - UberEat' },
-    { property: 'og:description', content: 'Retrouvez tous les plats ajoutés à votre panier et passez commande.' },
-    { property: 'og:type', content: 'website' }
-  ]
+import { useSeoMeta } from 'nuxt/app'
+
+useSeoMeta({
+  title: 'Mon Panier - FastEat',
+  description: 'Consultez et gérez votre panier avant de passer commande sur FastEat.',
+  ogTitle: 'Mon Panier - FastEat',
+  ogDescription: 'Consultez et gérez votre panier avant de passer commande sur FastEat.',
+  ogType: 'website'
 })
+
+
 import { useCartListStore } from "~/stores/cart/cartListStore";
 import { useOrderStore } from "~/stores/orders/orderStore";
 import type { Dish } from "~/modules/dish/types";
@@ -165,17 +167,8 @@ const decrementQuantity = (dish: Dish) => {
 }
 
 const passOrder = () => {
-  if (cartListStore.dishes.length > 0) {
-    // Ajouter la commande au store des orders
-    orderStore.addOrder(cartListStore.dishes, parseFloat(totalPrice.value));
-    
-    // Vider le panier
-    cartListStore.dishes.length = 0;
-    
-    // Rediriger vers la page des commandes
-    navigateTo('/order');
-  }
-};
+  orderStore.placeOrder(cartListStore, parseFloat(totalPrice.value))
+}
 </script>
 
 <style scoped>

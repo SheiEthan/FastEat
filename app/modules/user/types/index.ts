@@ -3,4 +3,7 @@ export interface User {
   email: string;
   password: string;
   role: 'admin' | 'restaurateur';
+  nom: string;
+  prenom: string;
+  restaurantId: number;
 }

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useSeoMeta } from 'nuxt/app'
+import { useHead } from '@unhead/vue'
+
 import DishItem from "~/components/DishItem.vue";
 import type { Restaurant } from "~/modules/restaurant/types";
 import type { Dish } from "~/modules/dish/types";
@@ -28,6 +31,17 @@ if (!restaurant.value) {
     statusCode: 404,
   });
 }
+
+useSeoMeta({
+  title: () => restaurant.value?.name ? `${restaurant.value.name} - FastEat` : 'Restaurant - FastEat',
+  description: () => restaurant.value?.description || 'Détails du restaurant sur FastEat.',
+  ogTitle: () => restaurant.value?.name ? `${restaurant.value.name} - FastEat` : 'Restaurant - FastEat',
+  ogDescription: () => restaurant.value?.description || 'Détails du restaurant sur FastEat.',
+  ogType: 'website'
+})
+
+// Si besoin d'autres balises personnalisées, tu peux ajouter un useHead ici
+// useHead({ ... })
 </script>
 
 <template>

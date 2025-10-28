@@ -1,13 +1,5 @@
 <script setup lang="ts">
-definePageMeta({
-  title: 'Restaurants - UberEat',
-  meta: [
-    { name: 'description', content: 'Explorez une sélection de restaurants exceptionnels près de chez vous.' },
-    { property: 'og:title', content: 'Restaurants - UberEat' },
-    { property: 'og:description', content: 'Explorez une sélection de restaurants exceptionnels près de chez vous.' },
-    { property: 'og:type', content: 'website' }
-  ]
-})
+import { useHead, useSeoMeta } from '@unhead/vue'
 import { useRestaurantStore } from '~/stores/restaurant/restaurantStore'
 
 const restaurantStore = useRestaurantStore()
@@ -18,6 +10,14 @@ const filteredRestaurants = computed(() => {
   return restaurantStore.restaurants.filter(r =>
     r.name.toLowerCase().includes(restaurantStore.searchQuery.toLowerCase())
   )
+})
+
+useSeoMeta({
+  title: 'Restaurants - FastEat',
+  description: 'Explorez une sélection de restaurants exceptionnels près de chez vous.',
+  ogTitle: 'Restaurants - FastEat',
+  ogDescription: 'Explorez une sélection de restaurants exceptionnels près de chez vous.',
+  ogType: 'website'
 })
 </script>
 
