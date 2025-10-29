@@ -3,7 +3,7 @@
 # FastEat
 
 ![CI](https://github.com/SheiEthan/FastEat/actions/workflows/playwright.yml/badge.svg)
-[![Vercel](https://vercelbadge.vercel.app/api/SheiEthan/FastEat)](https://fast-eat.vercel.app)
+[![Vercel](https://vercelbadge.vercel.app/api/SheiEthan/FastEat)](https://fast-eat-sigma.vercel.app)
 
 ## Présentation
 
