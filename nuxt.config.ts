@@ -8,7 +8,40 @@ export default defineNuxtConfig({
     'bootstrap-icons/font/bootstrap-icons.css',
   ],
 
-  modules: ['@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt', '@nuxtjs/i18n'],
+  modules: ['@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt', '@nuxtjs/i18n', '@vite-pwa/nuxt'],
+  pwa: {
+    manifest: {
+      name: 'FastEat',
+      short_name: 'FastEat',
+      description: 'Commandez vos plats préférés en ligne avec FastEat.',
+      theme_color: '#27ae60',
+      background_color: '#ffffff',
+      display: 'standalone',
+      start_url: '/',
+      lang: 'fr',
+      icons: [
+        {
+          src: '/icon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: '/icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+      ],
+    },
+    registerType: 'autoUpdate',
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,json}'],
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: true,
+    },
+  },
 
   i18n: {
     defaultLocale: 'fr',

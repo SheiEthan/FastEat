@@ -13,7 +13,7 @@
       </NuxtLink>    
       <button
           @click="addCart"
-          class="btn btn-primary"
+          class="btn btn-primary add-cart"
           >
           {{ $t('add_to_cart') }}
       </button>

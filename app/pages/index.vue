@@ -1,9 +1,9 @@
 <template>
-  <HeroSection>
+    <LazyHeroSection>
     <template #title>{{ $t('welcome') }}</template>
   <template #subtitle>{{ $t('homepage_subtitle') }}</template>
     <template #actions>
-      <NuxtLink to="/restaurants">
+      <NuxtLink to="/restaurants" class="go-resto">
         <BaseButton size="lg">
           {{ $t('discover_restaurants_btn') }}
         </BaseButton>
@@ -23,7 +23,7 @@
         {{ $t('secure_payment_feature') }}
       </FeatureItem>
     </template>
-  </HeroSection>
+    </LazyHeroSection>
 </template>
 
 <script setup lang="ts">

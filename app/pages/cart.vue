@@ -108,6 +108,8 @@ useSeoMeta({
   ogType: 'website'
 })
 
+definePageMeta({ SSR: false })
+
 
 import { useCartListStore } from "~/stores/cart/cartListStore";
 import { useOrderStore } from "~/stores/orders/orderStore";

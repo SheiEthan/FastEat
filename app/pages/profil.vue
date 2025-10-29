@@ -124,6 +124,8 @@ useSeoMeta({
   ogType: 'website'
 })
 
+definePageMeta({ SSR: false })
+
 const userStore = useUserStore()
 const isLoading = ref(false)
 const message = ref('')

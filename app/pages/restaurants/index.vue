@@ -63,7 +63,7 @@ useSeoMeta({
         </div>
 
         <div v-else class="row g-3">
-          <RestaurantItem 
+          <LazyRestaurantItem 
             :restaurant="restaurant" 
             v-for="restaurant in filteredRestaurants" 
             :key="restaurant.id"

@@ -237,7 +237,10 @@ const handleRegister = async () => {
   }
 }
 
-definePageMeta({ layout: false })
+definePageMeta({ 
+  layout: false,
+  SSR: false
+})
 </script>
 
 <style scoped>

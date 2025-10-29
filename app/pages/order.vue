@@ -45,4 +45,6 @@ useSeoMeta({
   ogDescription: 'Consultez l’historique de vos commandes sur FastEat.',
   ogType: 'website'
 })
+
+definePageMeta({ SSR: false })
 </script>

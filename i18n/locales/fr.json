@@ -1,5 +1,6 @@
 {
   "welcome": "Bienvenue sur FastEat",
+  "discover_restaurants_btn": "Découvrir les restaurants",
   "restaurants": "Restaurants",
   "profile": "Mon Profil",
   "orders": "Mes Commandes",
@@ -17,7 +18,6 @@
   "your_cart": "Votre Panier",
   "cart_empty": "Votre panier est vide",
   "add_dishes": "Ajoutez des délicieux plats pour commencer votre commande",
-  "discover_restaurants_btn": "Découvrir les restaurants",
   "dishes_count": "plat(s)",
   "subtotal": "Sous-total",
   "dishes": "plats",
