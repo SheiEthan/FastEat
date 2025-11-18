@@ -14,18 +14,6 @@
             </a>
           </li>
           <li>
-            <a href="#" @click.prevent="currentPage = 'commandes'">
-              <i class="icon">📦</i>
-              <span>Commandes</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" @click.prevent="currentPage = 'statistiques'">
-              <i class="icon">📊</i>
-              <span>Statistiques</span>
-            </a>
-          </li>
-          <li>
             <a href="#" @click.prevent="currentPage = 'parametres'">
               <i class="icon">⚙️</i>
               <span>Paramètres</span>
@@ -95,6 +83,14 @@
             <input id="new-email" v-model="newEmail" type="email" class="form-control" placeholder="email@example.com" required />
           </div>
           <div class="form-group">
+            <label for="new-nom">Nom</label>
+            <input id="new-nom" v-model="newNom" type="text" class="form-control" placeholder="Nom" required />
+          </div>
+          <div class="form-group">
+            <label for="new-prenom">Prénom</label>
+            <input id="new-prenom" v-model="newPrenom" type="text" class="form-control" placeholder="Prénom" required />
+          </div>
+          <div class="form-group">
             <label for="new-password">Mot de passe</label>
             <input id="new-password" v-model="newPassword" type="password" class="form-control" placeholder="Mot de passe" required />
           </div>
@@ -102,6 +98,38 @@
           <div class="modal-footer">
             <button type="button" @click="showAddForm = false" class="btn btn-secondary">Annuler</button>
             <button type="submit" class="btn btn-success">Ajouter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal d'édition -->
+    <div v-if="showEditForm" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>Modifier le restaurateur</h3>
+          <button @click="closeEditModal" class="btn-close">✕</button>
+        </div>
+        <form @submit.prevent="updateRestaurateur" class="modal-body">
+          <div class="form-group">
+            <label for="edit-email">Email</label>
+            <input id="edit-email" v-model="editForm.email" type="email" class="form-control" placeholder="email@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-nom">Nom</label>
+            <input id="edit-nom" v-model="editForm.nom" type="text" class="form-control" placeholder="Nom" />
+          </div>
+          <div class="form-group">
+            <label for="edit-prenom">Prénom</label>
+            <input id="edit-prenom" v-model="editForm.prenom" type="text" class="form-control" placeholder="Prénom" />
+          </div>
+          <div class="form-group">
+            <label for="edit-password">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+            <input id="edit-password" v-model="editForm.password" type="password" class="form-control" placeholder="Nouveau mot de passe" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click="closeEditModal" class="btn btn-secondary">Annuler</button>
+            <button type="submit" class="btn btn-success">Enregistrer</button>
           </div>
         </form>
       </div>
@@ -122,9 +150,19 @@ import type { User } from '~/modules/user/types'
 const restaurateurs = ref<User[]>([])
 const newEmail = ref('')
 const newPassword = ref('')
+const newNom = ref('')
+const newPrenom = ref('')
 const error = ref('')
 const showAddForm = ref(false)
+const showEditForm = ref(false)
 const currentPage = ref('restaurateurs')
+const editingRestaurateurId = ref<number | null>(null)
+const editForm = ref({
+  email: '',
+  password: '',
+  nom: '',
+  prenom: ''
+})
 
 const fetchRestaurateurs = async () => {
   try {
@@ -149,13 +187,15 @@ const addRestaurateur = async () => {
     id: newId,
     email: newEmail.value,
     role: 'restaurateur',
-    nom: '',
-    prenom: '',
+    nom: newNom.value,
+    prenom: newPrenom.value,
     restaurantId: 0,
-    password: ''
+    password: newPassword.value
   })
   newEmail.value = ''
   newPassword.value = ''
+  newNom.value = ''
+  newPrenom.value = ''
   showAddForm.value = false
 }
 
@@ -171,7 +211,44 @@ const removeRestaurateur = async (id: number) => {
  * @param {User} resto - Le restaurateur à modifier
  */
 const editRestaurateur = (resto: User) => {
-  console.log('Modifier:', resto)
+  editForm.value = {
+    email: resto.email,
+    password: '', // Ne pas pré-remplir le mot de passe
+    nom: resto.nom || '',
+    prenom: resto.prenom || ''
+  }
+  editingRestaurateurId.value = resto.id
+  showEditForm.value = true
+}
+
+const updateRestaurateur = () => {
+  if (editingRestaurateurId.value !== null) {
+    const restoIndex = restaurateurs.value.findIndex(r => r.id === editingRestaurateurId.value)
+    if (restoIndex !== -1 && restaurateurs.value[restoIndex]) {
+      const existingResto = restaurateurs.value[restoIndex]
+      restaurateurs.value[restoIndex] = {
+        id: existingResto.id,
+        role: existingResto.role,
+        restaurantId: existingResto.restaurantId,
+        email: editForm.value.email,
+        nom: editForm.value.nom,
+        prenom: editForm.value.prenom,
+        password: editForm.value.password || existingResto.password
+      }
+    }
+  }
+  closeEditModal()
+}
+
+const closeEditModal = () => {
+  showEditForm.value = false
+  editingRestaurateurId.value = null
+  editForm.value = {
+    email: '',
+    password: '',
+    nom: '',
+    prenom: ''
+  }
 }
 
 const logout = () => {
@@ -413,6 +490,7 @@ const formatDate = (date: Date) => {
   justify-content: space-between;
   align-items: start;
   margin-bottom: 1rem;
+  flex-direction: column;
 }
 
 .card-header h4 {

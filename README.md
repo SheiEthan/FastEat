@@ -59,6 +59,22 @@ npm install
 npm run dev
 ```
 
+## Comptes de test
+
+### Client (Front-office)
+- **Email** : `jean@client.com`
+- **Mot de passe** : `password123`
+
+### Back-office Admin
+- **Email** : `admin@ubereat.com`
+- **Mot de passe** : `admin123`
+- **Rôle** : Administrateur (accès complet)
+
+### Back-office Restaurateur
+- **Email** : `restaurateur@ubereat.com`
+- **Mot de passe** : `resto123`
+- **Rôle** : Restaurateur (gestion de son restaurant)
+
 ## Scripts utiles
 - `npm run dev` : Lancer le serveur de dev
 - `npm run build` : Build production

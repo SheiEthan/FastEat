@@ -38,7 +38,6 @@
 
     <!-- Contenu principal -->
         <main class="bo-main">
-          <LazyHeroSection />
       <!-- Header -->
       <header class="bo-header">
         <h1>

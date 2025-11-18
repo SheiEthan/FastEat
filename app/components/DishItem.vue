@@ -1,6 +1,6 @@
 <template>
   <div class="col-lg-3">
-    <div class="position-relative h-100">
+    <div class="position-relative h-100 hover-effect">
       <NuxtLink :to="`/restaurants/${restaurantSlug}/plats/${dishSlug}`" class="dish-card">
           <div class="card">
               <img :src="props.dish.image" class="card-img-top" :alt="props.dish.name" />
@@ -17,9 +17,9 @@
           >
           {{ $t('add_to_cart') }}
       </button>
-      <ToastNotification :message="toastMessage" :visible="showToast" />
     </div>
   </div>
+  <ToastNotification :message="toastMessage" :visible="showToast" />
 </template>
 
 <script setup lang="ts">

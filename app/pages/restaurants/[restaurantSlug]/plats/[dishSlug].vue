@@ -84,12 +84,9 @@
               </div>
               
               <div class="d-flex gap-3 mb-3">
-                <button class="btn btn-success btn-lg rounded-pill px-4" @click="addToCart">
+                <button class="btn btn-primary btn-lg rounded-pill px-4" @click="addToCart">
                   <i class="bi bi-cart-plus me-2"></i>
                   {{ $t('add_to_cart') }}
-                </button>
-                <button class="btn btn-outline-danger rounded-circle" style="width: 48px; height: 48px;">
-                  <i class="bi bi-heart"></i>
                 </button>
               </div>
               <ToastNotification :message="toastMessage" :visible="showToast" />

@@ -77,7 +77,7 @@
               </div>
               <div class="summary-line total">
                 <strong>
-                  <span>{{ $t('total') }} </span>
+                  <span class="pe-1">{{ $t('total') }} </span>
                   <span>{{ totalPrice }}€</span>
                 </strong>
               </div>

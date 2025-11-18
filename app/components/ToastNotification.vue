@@ -23,6 +23,7 @@ const props = defineProps<{ message: string; visible: boolean }>()
   font-size: 1.1rem;
   z-index: 9999;
   animation: toast-in 0.3s;
+  width: fit-content;
 }
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(30px); }

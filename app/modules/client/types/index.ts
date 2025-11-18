@@ -1,15 +1,5 @@
-export type Address = {
-  street: string;
-  postalCode: string;
-  city: string;
-};
-
-export type Order = {
-  id: number;
-  date: string;
-  items: any[];
-  total: number;
-};
+import type { Address } from '~/modules/address/types'
+import type { Order } from '~/modules/order/types'
 
 export type Client = {
   id: number;

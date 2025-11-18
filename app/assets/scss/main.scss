@@ -11,6 +11,100 @@ $color-shadow: 0 6px 18.5px 2.5px #dddddd;
 $color-shadow-card: 0 10px 30px rgba(0,0,0,0.1);
 $color-shadow-btn: 0 8px 25px rgba(39, 174, 96, 0.2);
 
+// ================================
+// MIXINS RÉUTILISABLES
+// ================================
+
+// Gradient vert principal
+@mixin gradient-green {
+  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
+}
+
+// Gradient gris de fond
+@mixin gradient-grey {
+  background: linear-gradient(135deg, $color-grey-bg 0%, $color-grey-alt 100%);
+}
+
+// Card avec ombre et bordure arrondie
+@mixin card-base {
+  background: white;
+  border-radius: 20px;
+  box-shadow: $color-shadow-card;
+  overflow: hidden;
+}
+
+// Badge/Pill style
+@mixin badge-pill {
+  background: rgba(255,255,255,0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+// Header de section avec gradient vert
+@mixin section-header-green {
+  @include gradient-green;
+  color: white;
+  padding: 1.5rem 2rem;
+}
+
+// Container de page avec fond gradient
+@mixin page-container {
+  @include gradient-grey;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+// Titre de page centré
+@mixin page-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+// État vide (no items)
+@mixin empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  @include card-base;
+  max-width: 500px;
+  margin: 0 auto;
+
+  &-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #bdc3c7;
+  }
+
+  h3 {
+    color: #34495e;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #7f8c8d;
+  }
+}
+
+// Bouton hover lift effect
+@mixin btn-hover-lift {
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $color-shadow-btn;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
 /* ================================
    STYLES GLOBAUX
    ================================ */
@@ -20,7 +114,7 @@ body {
 }
 
 .main {
-  background: linear-gradient(135deg, $color-grey-bg 0%, $color-grey-alt 100%);
+  @include gradient-grey;
   min-height: 100vh;
 }
 
@@ -55,7 +149,7 @@ body {
       position: absolute;
       top: -5px;
       right: -8px;
-  background: $color-green-main;
+      background: $color-green-main;
       color: white;
       border-radius: 50%;
       width: 15px;
@@ -80,18 +174,44 @@ body {
 }
 
 /* ================================
+   BREADCRUMB
+   ================================ */
+
+.breadcrumb {
+  .breadcrumb-item {
+    a {
+      color: $color-green-main;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      
+      &:hover {
+        color: $color-green-dark;
+        text-decoration: underline;
+      }
+    }
+    
+    &.active {
+      color: $color-green-main;
+    }
+    
+    + .breadcrumb-item::before {
+      color: #6c757d;
+    }
+  }
+}
+
+/* ================================
    BUTTONS GLOBAUX
    ================================ */
 
 .btn-primary {
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
+  @include gradient-green;
   border: none;
-  transition: transform 0.2s;
-}
+  @include btn-hover-lift;
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, $color-green-dark 0%, $color-green-darker 100%);
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, $color-green-dark 0%, $color-green-darker 100%);
+  }
 }
 
 .btn:hover {
@@ -106,7 +226,7 @@ body {
   min-height: 80vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  @include gradient-green;
   color: white;
 }
 
@@ -164,8 +284,7 @@ body {
 }
 
 .auth-container {
-  background: white;
-  border-radius: 20px;
+  @include card-base;
   padding: 2rem;
   width: 100%;
   max-width: 450px;
@@ -306,42 +425,18 @@ body {
 
 .page-cart {
   .cart-container {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 2rem 0;
+    @include page-container;
   }
 
   .cart-title {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 2rem;
-    font-weight: bold;
-    font-size: 2.5rem;
+    @include page-title;
   }
 
   /* Empty Cart */
   .empty-cart {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    max-width: 500px;
-    margin: 0 auto;
-
-    &-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      color: #bdc3c7;
-    }
-
-    h3 {
-      color: #34495e;
-      margin-bottom: 1rem;
-    }
+    @include empty-state;
 
     p {
-      color: #7f8c8d;
       margin-bottom: 2rem;
     }
   }
@@ -352,25 +447,14 @@ body {
   }
 
   .restaurant-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    @include card-base;
     margin-bottom: 2rem;
-    overflow: hidden;
     border: 2px solid transparent;
     transition: all 0.3s ease;
-
-      /* Suppression du hover sur la carte restaurant dans le panier */
-      /* &:hover {
-        border-color: #27ae60;
-        transform: translateY(-5px);
-      } */
   }
 
   .restaurant-header {
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
-    color: white;
-    padding: 1.5rem 2rem;
+    @include section-header-green;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -390,13 +474,9 @@ body {
   }
 
   .dish-count {
-    background: rgba(255,255,255,0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    @include badge-pill;
     font-size: 0.9rem;
-    backdrop-filter: blur(10px);
     margin-left: auto;
-    border: 1px solid rgba(255,255,255,0.3);
   }
 
   .dish-item {
@@ -406,11 +486,6 @@ body {
     align-items: center;
     gap: 1.5rem;
     transition: background 0.2s;
-
-      /* Suppression du hover sur les produits du panier */
-      /* &:hover {
-        background: #f8f9fa;
-      } */
 
     &:last-child {
       border-bottom: none;
@@ -518,17 +593,12 @@ body {
 
   /* Checkout Card */
   .checkout-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden;
+    @include card-base;
     position: sticky;
     top: 2rem;
 
     .checkout-header {
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
-      color: white;
-      padding: 1.5rem 2rem;
+      @include section-header-green;
       text-align: center;
 
       h3 {
@@ -564,7 +634,8 @@ body {
 
     .btn-checkout {
       width: 100%;
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
+      @include gradient-green;
+      @include btn-hover-lift;
       color: white;
       border: none;
       padding: 1rem;
@@ -572,21 +643,13 @@ body {
       font-size: 1.1rem;
       font-weight: bold;
       margin-top: 1.5rem;
-      transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
 
-      &:hover {
-        transform: translateY(-2px);
-  box-shadow: $color-shadow-btn;
-      }
-
       &:disabled {
         background: #bdc3c7;
-        cursor: not-allowed;
-        transform: none;
       }
     }
   }
@@ -657,9 +720,7 @@ body {
    ================================ */
 
 .page-orders {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 0;
+  @include page-container;
 
   .container {
     max-width: 1200px;
@@ -668,22 +729,13 @@ body {
   }
 
   h1 {
-    text-align: center;
-    color: #2c3e50;
+    @include page-title;
     margin-bottom: 3rem;
-    font-size: 2.5rem;
-    font-weight: bold;
   }
 
   /* No Orders State */
   .no-orders {
-    text-align: center;
-    background: white;
-    border-radius: 20px;
-    padding: 4rem 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    max-width: 500px;
-    margin: 0 auto;
+    @include empty-state;
 
     p {
       font-size: 1.2rem;
@@ -717,10 +769,7 @@ body {
   }
 
   .order-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden;
+    @include card-base;
     border: 2px solid transparent;
     transition: all 0.3s ease;
 
@@ -731,9 +780,7 @@ body {
   }
 
   .order-header {
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
-    color: white;
-    padding: 1.5rem 2rem;
+    @include section-header-green;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -744,13 +791,9 @@ body {
     }
 
     .total-price {
-      background: rgba(255,255,255,0.2);
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
+      @include badge-pill;
       font-size: 1.1rem;
       font-weight: bold;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.3);
     }
   }
 
@@ -836,7 +879,7 @@ body {
 
 .page-restaurants-index {
   .restaurants-header {
-  background: linear-gradient(135deg, $color-green-main 0%, $color-green-alt 100%);
+    @include gradient-green;
     color: white;
     padding: 4rem 0;
     text-align: center;
@@ -879,28 +922,49 @@ body {
 
   .restaurants-section {
     padding: 3rem 0;
-
+    .restaurant-card {
+      .card {
+        max-height: 300px;
+        height: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .image {
+          position: relative;
+          &:before {
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 15px;
+            z-index: 1;
+            pointer-events: none;
+          }
+          img {
+            transition: all 0.3s ease;
+            object-fit: cover;
+            border-radius: 15px;
+          }
+        }
+        &:hover {
+          .image {
+            img {
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
     .no-restaurants {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-
-      &-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        color: #bdc3c7;
-      }
-
-      h3 {
-        color: #34495e;
-        margin-bottom: 1rem;
-      }
-
-      p {
-        color: #7f8c8d;
-      }
+      @include empty-state;
     }
   }
 
@@ -930,7 +994,6 @@ body {
     position: relative;
     height: 400px;
     overflow: hidden;
-    margin-bottom: 2rem;
     
     .banner-image {
       position: relative;
@@ -1011,46 +1074,38 @@ body {
     }
     
     .no-dishes {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      
-      &-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-      }
-      
-      h3 {
-        color: #34495e;
-        margin-bottom: 1rem;
-      }
-      
-      p {
-        color: #7f8c8d;
-      }
+      @include empty-state;
     }
-          
-    .dish-card {
-      text-decoration: none;
-      .card {
-        padding-bottom: 30px;
-        border-radius: 15px;
-        height: 100%;
-        img {
-          max-height: 182px;
+    
+    .hover-effect {
+      transition: all 0.3s ease;
+      border: 2px solid white !important;
+      border-radius: 15px;
+      &:hover {
+        transform: translateY(-5px);
+        border: 2px solid $color-green-main !important;
+      }
+      .dish-card {
+        text-decoration: none;        
+        .card {
+          padding-bottom: 50px;
+          border-radius: 13px;
           height: 100%;
-          object-fit: cover;
-        }
-      }     
+          img {
+            max-height: 182px;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 13px 13px 0 0;
+          }
+        }     
+      }
     }
+    
     button {
       position: absolute;
       bottom: 0;
       width: 100%;
-      border-radius: 0 0 15px 15px;
-      padding: 5px !important;
+      border-radius: 0 0 13px 13px;
       &:hover {
         transform: translateY(0px);
       }
@@ -1270,10 +1325,8 @@ body {
   justify-content: center;
 
   .bo-login-card {
-    background: white;
-    border-radius: 20px;
+    @include card-base;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    overflow: hidden;
     max-width: 400px;
     width: 100%;
 

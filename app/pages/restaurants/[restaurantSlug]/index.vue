@@ -65,15 +65,14 @@ useSeoMeta({
     </div>
 
     <!-- Section des plats -->
-    <div class="dishes-section">
+    <div class="dishes-section py-5">
       <div class="container">
         <div class="section-header">
-          <h2>🍽️ {{ $t('restaurant_menu') }}</h2>
+          <h2>{{ $t('restaurant_menu') }}</h2>
           <p>{{ $t('discover_dishes') }}</p>
         </div>
 
         <div v-if="restaurantDishes.length === 0" class="no-dishes">
-          <div class="no-dishes-icon">🍽️</div>
           <h3>{{ $t('no_dishes_available') }}</h3>
           <p>{{ $t('restaurant_updates_menu') }}</p>
         </div>

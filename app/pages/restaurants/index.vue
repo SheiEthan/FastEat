@@ -56,11 +56,11 @@ useSeoMeta({
     <!-- Section des restaurants -->
     <div class="restaurants-section">
       <div class="container">
-  <div v-if="restaurantStore.restaurants.length === 0" class="no-restaurants">
+        <div v-if="restaurantStore.restaurants.length === 0" class="no-restaurants">
           <div class="no-restaurants-icon">🏪</div>
-          <h3>{{ $t('no_restaurants_available') }}</h3>
-          <p>{{ $t('adding_new_restaurants') }}</p>
-        </div>
+            <h3>{{ $t('no_restaurants_available') }}</h3>
+            <p>{{ $t('adding_new_restaurants') }}</p>
+          </div>
 
         <div v-else class="row g-3">
           <LazyRestaurantItem 

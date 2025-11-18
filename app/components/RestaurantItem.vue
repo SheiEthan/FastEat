@@ -2,8 +2,8 @@
   <div class="col-lg-6">
     <NuxtLink :to="`/restaurants/${restaurantSlug}`">
       <div class="card text-bg-dark">
-        <div class="image">
-          <img :src="restaurant.image" class="card-img-top" :alt="restaurant.name" />
+        <div class="image h-100">
+          <img :src="restaurant.image" class="card-img-top h-100" :alt="restaurant.name" />
         </div>
         <div class="card-img-overlay">
           <h5 class="card-title">{{ restaurant.name }}</h5>

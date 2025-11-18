@@ -5,7 +5,7 @@
     "description": "7 services créatifs autour des légumes du potager et des produits lacustres",
     "price": 195,
     "category": "Menu",
-    "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=400&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop",
     "restaurantId": 1
   },
   {
@@ -59,7 +59,7 @@
     "description": "Poisson emblématique en croûte d'herbes, beurre blanc au vin de Savoie",
     "price": 38,
     "category": "Poisson",
-    "image": "https://images.unsplash.com/photo-1535473895227-bdab97e5d1b3?q=80&w=400&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=800&auto=format&fit=crop",
     "restaurantId": 2
   },
   {
@@ -104,7 +104,7 @@
     "description": "Fromage de Savoie fondu, charcuterie locale, pommes de terre",
     "price": 19,
     "category": "Spécialité",
-    "image": "https://images.unsplash.com/photo-1544454404-80ad7d34ac95?q=80&w=400&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1530610476181-d83430b64dcd?q=80&w=800&auto=format&fit=crop",
     "restaurantId": 3
   },
   {
