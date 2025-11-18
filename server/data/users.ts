@@ -1,7 +1,7 @@
 export const users = [
   {
     id: 1,
-    email: "admin@ubereat.com",
+    email: "admin@fasteat.com",
     password: "admin123",
     role: "admin",
     nom: "Administrateur",
@@ -9,7 +9,7 @@ export const users = [
   },
   {
     id: 2,
-    email: "restaurateur@ubereat.com",
+    email: "restaurateur@fasteat.com",
     password: "resto123",
     role: "restaurateur",
     nom: "Dupont",
@@ -18,7 +18,7 @@ export const users = [
   },
   {
     id: 3,
-    email: "pizza@ubereat.com",
+    email: "pizza@fasteat.com",
     password: "pizza123",
     role: "restaurateur",
     nom: "Romano",

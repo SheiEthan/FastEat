@@ -66,12 +66,12 @@ npm run dev
 - **Mot de passe** : `password123`
 
 ### Back-office Admin
-- **Email** : `admin@ubereat.com`
+- **Email** : `admin@fasteat.com`
 - **Mot de passe** : `admin123`
 - **Rôle** : Administrateur (accès complet)
 
 ### Back-office Restaurateur
-- **Email** : `restaurateur@ubereat.com`
+- **Email** : `restaurateur@fasteat.com`
 - **Mot de passe** : `resto123`
 - **Rôle** : Restaurateur (gestion de son restaurant)
 
