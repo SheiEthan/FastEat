@@ -11,5 +11,6 @@
   "email": "Email",
   "password": "Mot de passe",
   "home": "Accueil",
-  "loading": "Chargement..."
+  "loading": "Chargement...",
+  "select_language": "Sélectionner la langue"
 }

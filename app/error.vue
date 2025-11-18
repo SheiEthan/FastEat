@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'bo'
+  layout: 'default'
 })
 
 interface ErrorProps {

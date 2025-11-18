@@ -11,5 +11,6 @@
   "email": "Email",
   "password": "Password",
   "home": "Home",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "select_language": "Select language"
 }

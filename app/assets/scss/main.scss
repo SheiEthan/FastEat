@@ -214,6 +214,24 @@ body {
   }
 }
 
+.btn-outline-danger {
+  color: #c0392b;
+  border-color: #c0392b;
+  
+  &:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: white;
+  }
+  
+  &:focus,
+  &:active {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: white;
+  }
+}
+
 .btn:hover {
   transform: translateY(-1px);
 }

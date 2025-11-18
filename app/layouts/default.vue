@@ -15,7 +15,8 @@
             <NuxtLink to="/order" class="mx-3"><i class="bi bi-arrow-counterclockwise"></i> {{ t('orders') }}</NuxtLink>
             <!-- Sélecteur de langue -->
             <div class="mx-3">
-              <select :value="locale" @change="changeLocale" class="form-select form-select-sm lang-select">
+              <label for="language-selector" class="visually-hidden">{{ t('select_language') }}</label>
+              <select id="language-selector" :value="locale" @change="changeLocale" class="form-select form-select-sm lang-select" aria-label="Sélection de la langue">
                 <option value="fr">🇫🇷 Français</option>
                 <option value="en">🇬🇧 English</option>
               </select>

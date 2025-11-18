@@ -67,10 +67,14 @@ export default defineNuxtConfig({
     ],
     strategy: 'no_prefix',
     langDir: 'locales/',
+    vueI18n: './i18n.config.ts'
   },
 
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'fr'
+      },
       title: 'FastEat',
       meta: [
         { name: 'description', content: 'FastEat - Commandez vos plats préférés en ligne.' },
