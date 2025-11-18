@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     workbox: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico,json}'],
-      navigateFallbackDenylist: [/^\/api\//],
+      cleanupOutdatedCaches: true,
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,

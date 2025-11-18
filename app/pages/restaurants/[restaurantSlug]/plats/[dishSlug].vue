@@ -163,20 +163,19 @@ const { data: restaurant } = await useAsyncData("restaurant", () =>
 // Récupérer les données du plat
 const dishStore = useDishStore()
 const { data: dish } = await useAsyncData("dish", () => $fetch(`/api/dishes/${dish_id}`))
-dishStore.selectDish(dish.value)
 
 // Vérifier que le plat appartient bien à ce restaurant
 if (!dish.value || !restaurant.value) {
-  throw createError({
-    statusCode: 404,
-  });
+  await navigateTo(`/restaurants/${restaurantSlug}`);
 }
 
-if (dish.value.restaurantId !== restaurant_id) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Ce plat ne fait pas partie de ce restaurant'
-  });
+if (dish.value && dish.value.restaurantId !== restaurant_id) {
+  // Rediriger vers la page du restaurant indiqué dans l'URL
+  await navigateTo(`/restaurants/${restaurantSlug}`);
+}
+
+if (dish.value) {
+  dishStore.selectDish(dish.value)
 }
 
 useSeoMeta({

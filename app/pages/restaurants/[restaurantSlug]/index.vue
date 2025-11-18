@@ -27,9 +27,7 @@ const restaurantDishes = computed(() => {
 });
 
 if (!restaurant.value) {
-  throw createError({
-    statusCode: 404,
-  });
+  await navigateTo('/restaurants');
 }
 
 useSeoMeta({
