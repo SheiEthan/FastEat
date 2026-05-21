@@ -1,23 +1,15 @@
-import { defineNuxtRouteMiddleware, navigateTo, useNuxtApp } from '#imports'
-import { useBoAuthStore } from '../stores/user/boAuthStore'
+import { useBoAuthStore } from '@/stores/user/boAuthStore'
+import { defineNuxtRouteMiddleware, navigateTo } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (!import.meta.client) return
-
   const boAuth = useBoAuthStore()
-  boAuth.loadFromStorage()
-  const user = boAuth.user
-
-  // Redirection automatique si déjà connecté au BO
-  if (to.path === '/bo' && user) {
-    if (user.role === 'admin') return navigateTo('/bo/admin', { replace: true })
-    if (user.role === 'restaurateur') return navigateTo('/bo/restaurateur', { replace: true })
+  // Si la page est protégée BO et que l'utilisateur n'est pas authentifié, on redirige
+  if ((to.path.startsWith('/bo/admin') || to.path.startsWith('/bo/restaurateur')) && !boAuth.isAuthenticated) {
+    return navigateTo('/bo')
   }
-
-  // Protection des routes BO (hors /bo)
-  if (to.path.startsWith('/bo/') && to.path !== '/bo') {
-    if (!user) return navigateTo('/bo', { replace: true })
-    if (to.path.startsWith('/bo/admin') && user.role !== 'admin') return navigateTo('/bo', { replace: true })
-    if (to.path.startsWith('/bo/restaurateur') && user.role !== 'restaurateur') return navigateTo('/bo', { replace: true })
+  // Redirection automatique selon le rôle
+  if (to.path === '/bo' && boAuth.isAuthenticated) {
+    if (boAuth.user?.role === 'ADMIN') return navigateTo('/bo/admin')
+    if (boAuth.user?.role === 'RESTAURANT') return navigateTo('/bo/restaurateur')
   }
 })

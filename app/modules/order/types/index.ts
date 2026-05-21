@@ -1,7 +1,7 @@
 import type { Dish } from '~/modules/dish/types'
 
 export interface Order {
-  id: number
+  id: string
   date: string
   items: Dish[]
   total: number

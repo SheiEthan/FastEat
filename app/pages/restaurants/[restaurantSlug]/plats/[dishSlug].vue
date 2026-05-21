@@ -152,8 +152,8 @@ const cartListStore = useCartListStore();
 
 const restaurantSlug = route.params.restaurantSlug as string;
 const dishSlug = route.params.dishSlug as string;
-const restaurant_id: number = extractIdFromSlug(restaurantSlug);
-const dish_id: number = extractIdFromSlug(dishSlug);
+const restaurant_id: string = extractIdFromSlug(restaurantSlug);
+const dish_id: string = extractIdFromSlug(dishSlug);
 
 // Récupérer les données du restaurant
 const { data: restaurant } = await useAsyncData("restaurant", () =>

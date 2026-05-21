@@ -1,7 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
+
+  runtimeConfig: {
+    apiBaseUrl: 'http://localhost:3000',
+  },
+
+  devServer: {
+    port: 3001,
+  },
 
   css: [
     'bootstrap/dist/css/bootstrap.min.css',

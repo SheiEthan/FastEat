@@ -46,7 +46,7 @@
           <span v-else-if="currentPage === 'commandes'">📦 Commandes Reçues</span>
         </h1>
         <div class="user-info">
-          <span>{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+          <span>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
         </div>
       </header>
 
@@ -67,11 +67,7 @@
             </div>
             <div class="info-row">
               <label>Adresse :</label>
-              <span>{{ restaurantForm.street || 'Rue non définie' }}</span>
-            </div>
-            <div class="info-row">
-              <label>Code Postal :</label>
-              <span>{{ restaurantForm.postalCode || 'Code postal non défini' }}</span>
+              <span>{{ restaurantForm.address || 'Adresse non définie' }}</span>
             </div>
             <div class="info-row">
               <label>Ville :</label>
@@ -85,12 +81,8 @@
               <input v-model="restaurantForm.name" type="text" required>
             </div>
             <div class="form-group">
-              <label>Rue :</label>
-              <input v-model="restaurantForm.street" type="text" placeholder="123 rue de la Paix">
-            </div>
-            <div class="form-group">
-              <label>Code Postal :</label>
-              <input v-model="restaurantForm.postalCode" type="text" placeholder="75001">
+              <label>Adresse :</label>
+              <input v-model="restaurantForm.address" type="text" placeholder="123 rue de la Paix, 75001 Paris">
             </div>
             <div class="form-group">
               <label>Ville :</label>
@@ -137,7 +129,7 @@
         </div>
 
         <div class="plats-grid">
-          <div v-for="plat in restaurantPlats" :key="plat.id" class="plat-card">
+          <div v-for="plat in plats" :key="plat.id" class="plat-card">
             <img :src="plat.image" :alt="plat.name" class="plat-image">
             <div class="plat-info">
               <h3>{{ plat.name }}</h3>
@@ -151,7 +143,7 @@
         </div>
 
         <!-- Pas de plats -->
-        <div v-if="restaurantPlats.length === 0 && !showAddPlat" class="empty-state">
+        <div v-if="plats.length === 0 && !showAddPlat" class="empty-state">
           <p>🍽️ Aucun plat ajouté pour le moment</p>
           <button @click="showAddPlat = true" class="btn btn-primary">Ajouter votre premier plat</button>
         </div>
@@ -162,12 +154,12 @@
         <div class="section-header">
           <h2>Commandes Reçues</h2>
           <div class="commandes-stats">
-            <span class="stat">{{ commandesRestaurant.length }} commandes</span>
+            <span class="stat">{{ commandes.length }} commandes</span>
           </div>
         </div>
 
         <div class="commandes-list">
-          <div v-for="commande in commandesRestaurant" :key="commande.id" class="commande-card">
+          <div v-for="commande in commandes" :key="commande.id" class="commande-card">
             <div class="commande-header">
               <div class="commande-info">
                 <h3>Commande #{{ commande.id }}</h3>
@@ -194,7 +186,7 @@
         </div>
 
         <!-- Pas de commandes -->
-        <div v-if="commandesRestaurant.length === 0" class="empty-state">
+        <div v-if="commandes.length === 0" class="empty-state">
           <p>📦 Aucune commande reçue pour le moment</p>
         </div>
       </div>
@@ -209,126 +201,91 @@ definePageMeta({
   middleware: 'bo-auth-global-client'
 })
 
-import { ref, onMounted, computed } from 'vue'
-import type { Restaurant } from '~/modules/restaurant/types'
+import { ref, onMounted } from 'vue'
 import type { Dish } from '~/modules/dish/types'
-import type { User } from '~/modules/user/types'
-import type { Commande } from '~/modules/commande/types'
+import { useBoAuthStore } from '@/stores/user/boAuthStore'
 
-// État de l'application
+const boAuth = useBoAuthStore()
+
 const currentPage = ref('restaurant')
-const currentUser = ref<User | null>(null)
 const editRestaurant = ref(false)
 const showAddPlat = ref(false)
 const showEditPlat = ref(false)
-const editingPlatId = ref<number | null>(null)
+const editingPlatId = ref<string | null>(null)
 
-// Données
-const restaurants = ref<Restaurant[]>([])
+const userRestaurant = ref<any>(null)
 const plats = ref<Dish[]>([])
-const commandes = ref<Commande[]>([])
+const commandes = ref<any[]>([])
 
-// Formulaires
-const restaurantForm = ref({
-  name: '',
-  street: '',
-  postalCode: '',
-  city: ''
-})
+const currentUser = boAuth.user
 
-const platForm = ref({
-  name: '',
-  image: '',
-  price: 0,
-  description: '',
-  category: ''
-})
+const restaurantForm = ref({ name: '', address: '', city: '', description: '' })
+const platForm = ref({ name: '', image: '', price: 0, description: '', category: 'MAIN_COURSE' })
 
-// Computed
-const userRestaurant = computed(() => {
-  if (!currentUser.value?.restaurantId) return null
-  return restaurants.value.find(r => r.id === currentUser.value?.restaurantId)
-})
+const getAuthHeaders = (): Record<string, string> => {
+  const token = boAuth.user?.token
+  if (!token) return {}
+  return { authorization: `Bearer ${token}` }
+}
 
-const restaurantPlats = computed(() => {
-  if (!userRestaurant.value) return []
-  return plats.value.filter(p => p.restaurantId === userRestaurant.value!.id)
-})
-
-const commandesRestaurant = computed(() => {
-  if (!userRestaurant.value) return []
-  return commandes.value.filter(c => c.restaurantId === userRestaurant.value!.id)
-})
-
-// Méthodes
 const loadData = async () => {
   try {
-    // Charger les restaurants
-    const restaurantsRes = await $fetch('/api/restaurants') as Restaurant[]
-    restaurants.value = restaurantsRes
-
-    // Charger les plats pour ce restaurant
-    if (currentUser.value?.restaurantId) {
-      const platsRes = await $fetch('/api/dishes', {
-        query: { restaurantId: currentUser.value.restaurantId }
-      }) as Dish[]
-      plats.value = platsRes
-
-      // Charger les commandes pour ce restaurant
-      const commandesRes = await $fetch('/api/commandes', {
-        query: { restaurantId: currentUser.value.restaurantId }
-      }) as Commande[]
-      commandes.value = commandesRes
+    const resto = await $fetch<any>('/api/restaurants/me', { headers: getAuthHeaders() })
+    userRestaurant.value = resto
+    restaurantForm.value = {
+      name: resto.name || '',
+      address: resto.address || '',
+      city: resto.city || '',
+      description: resto.description || '',
     }
-  } catch (error) {
-    console.error('Erreur lors du chargement des données:', error)
+    plats.value = await $fetch<Dish[]>('/api/dishes', { query: { restaurantId: resto.id } })
+  } catch (e) {
+    console.error('Erreur chargement:', e)
   }
 }
 
 const logout = () => {
-  localStorage.removeItem('bo-user')
-  
-  // Supprimer le cookie d'authentification
+  boAuth.logout()
   const authCookie = useCookie('bo-auth')
   authCookie.value = null
-  
   navigateTo('/bo')
 }
 
-const saveRestaurant = () => {
-  // TODO: Sauvegarder les modifications du restaurant
-  console.log('Sauvegarder restaurant:', restaurantForm.value)
-  editRestaurant.value = false
+const saveRestaurant = async () => {
+  try {
+    const updated = await $fetch<any>('/api/restaurants/me', {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: restaurantForm.value,
+    })
+    userRestaurant.value = updated
+    editRestaurant.value = false
+  } catch (e) {
+    console.error('Erreur sauvegarde restaurant:', e)
+  }
 }
 
-const savePlat = () => {
-  if (showEditPlat.value && editingPlatId.value) {
-    // Modifier un plat existant
-    const platIndex = plats.value.findIndex(p => p.id === editingPlatId.value)
-    if (platIndex !== -1 && plats.value[platIndex]) {
-      const existingPlat = plats.value[platIndex]
-      plats.value[platIndex] = {
-        id: existingPlat.id,
-        restaurantId: existingPlat.restaurantId,
-        name: platForm.value.name,
-        image: platForm.value.image,
-        price: platForm.value.price,
-        description: platForm.value.description || '',
-        category: platForm.value.category || ''
-      }
+const savePlat = async () => {
+  if (!userRestaurant.value) return
+  try {
+    if (showEditPlat.value && editingPlatId.value) {
+      const updated = await $fetch<Dish>(`/api/dishes/${editingPlatId.value}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        body: { ...platForm.value, restaurantId: userRestaurant.value.id },
+      })
+      const idx = plats.value.findIndex(p => p.id === editingPlatId.value)
+      if (idx !== -1) plats.value[idx] = updated
+    } else {
+      const created = await $fetch<Dish>('/api/dishes', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: { ...platForm.value, restaurantId: userRestaurant.value.id },
+      })
+      plats.value.push(created)
     }
-  } else {
-    // Ajouter un nouveau plat
-    const newPlat: Dish = {
-      id: Date.now(),
-      name: platForm.value.name,
-      image: platForm.value.image,
-      price: platForm.value.price,
-      description: platForm.value.description || '',
-      category: platForm.value.category || '',
-      restaurantId: userRestaurant.value?.id || 0
-    }
-    plats.value.push(newPlat)
+  } catch (e) {
+    console.error('Erreur sauvegarde plat:', e)
   }
   closeModal()
 }
@@ -339,16 +296,23 @@ const editPlat = (plat: Dish) => {
     price: plat.price,
     image: plat.image ?? '',
     description: plat.description ?? '',
-    category: plat.category ?? ''
+    category: plat.category ?? 'MAIN_COURSE',
   }
   editingPlatId.value = plat.id
   showEditPlat.value = true
-  showAddPlat.value = true // Afficher le formulaire
+  showAddPlat.value = true
 }
 
-const deletePlat = (platId: number) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')) {
+const deletePlat = async (platId: string) => {
+  if (!userRestaurant.value || !confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')) return
+  try {
+    await $fetch(`/api/dishes/${platId}?restaurantId=${userRestaurant.value.id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    })
     plats.value = plats.value.filter(p => p.id !== platId)
+  } catch (e) {
+    console.error('Erreur suppression plat:', e)
   }
 }
 
@@ -356,58 +320,33 @@ const closeModal = () => {
   showAddPlat.value = false
   showEditPlat.value = false
   editingPlatId.value = null
-  platForm.value = {
-    name: '',
-    image: '',
-    price: 0
-  }
+  platForm.value = { name: '', image: '', price: 0, description: '', category: 'MAIN_COURSE' }
 }
 
-const updateCommandeStatus = (commandeId: number, newStatus: string) => {
+const updateCommandeStatus = (commandeId: string, newStatus: string) => {
   const commande = commandes.value.find(c => c.id === commandeId)
-  if (commande) {
-    commande.status = newStatus as any
-  }
+  if (commande) commande.status = newStatus
 }
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
   })
 }
 
 const getStatusText = (status: string) => {
   const statusMap: Record<string, string> = {
-    pending: 'En attente',
-    confirmed: 'Confirmée',
-    ready: 'Prête',
-    delivered: 'Livrée'
+    PENDING: 'En attente', CONFIRMED: 'Confirmée',
+    PREPARING: 'En préparation', READY: 'Prête',
+    DELIVERED: 'Livrée', CANCELLED: 'Annulée',
   }
   return statusMap[status] || status
 }
 
-// Initialisation
 onMounted(async () => {
-  const userData = localStorage.getItem('bo-user')
-  if (userData) {
-    currentUser.value = JSON.parse(userData)
-  }
-  
-  // Charger les données
+  boAuth.loadFromStorage()
   await loadData()
-  
-  // Initialiser le formulaire restaurant avec les données existantes
-  if (userRestaurant.value) {
-    restaurantForm.value = {
-      name: userRestaurant.value.name,
-      city: userRestaurant.value.city || ''
-      // street et postalCode ne sont pas dans le type importé, donc ignorés
-    }
-  }
 })
 </script>
 

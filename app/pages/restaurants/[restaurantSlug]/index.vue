@@ -9,7 +9,7 @@ import { extractIdFromSlug } from "~/utils/slugs";
 
 const route = useRoute();
 const restaurantSlug = route.params.restaurantSlug as string;
-const restaurant_id: number = extractIdFromSlug(restaurantSlug);
+const restaurant_id: string = extractIdFromSlug(restaurantSlug);
 
 // Récupérer les données du restaurant
 const { data: restaurant } = await useAsyncData("restaurant", () =>

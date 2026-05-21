@@ -1,9 +1,8 @@
 export interface User {
-  id: number;
+  id: string;
   email: string;
-  password: string;
-  role: 'admin' | 'restaurateur';
-  nom: string;
-  prenom: string;
-  restaurantId: number;
+  role: 'ADMIN' | 'RESTAURANT' | 'USER';
+  firstName?: string;
+  lastName?: string;
+  token?: string;
 }

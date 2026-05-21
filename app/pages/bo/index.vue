@@ -25,11 +25,13 @@ definePageMeta({
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useBoAuthStore } from '@/stores/user/boAuthStore'
 
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const router = useRouter()
+const boAuth = useBoAuthStore()
 
 const handleLogin = async () => {
   error.value = ''
@@ -54,25 +56,21 @@ const handleLogin = async () => {
       
       // Sauvegarder l'utilisateur dans localStorage et cookie
       if (typeof window !== 'undefined') {
-        localStorage.setItem('bo-user', JSON.stringify(data.user))
-        
-        // Définir également un cookie pour la vérification côté serveur
+        boAuth.setUser(data.user)
+        boAuth.saveToStorage()
+
         const authCookie = useCookie('bo-auth', {
           default: () => '',
           httpOnly: false,
           secure: false,
           sameSite: 'lax',
-          maxAge: 60 * 60 * 24 * 7 // 7 jours
+          maxAge: 60 * 60 * 24 * 7
         })
         authCookie.value = JSON.stringify(data.user)
-        
-        console.log('Données sauvées dans localStorage et cookie')
-        
-        if (data.user.role === 'admin') {
-          console.log('Redirection vers admin...')
+
+        if (data.user.role === 'ADMIN') {
           router.push('/bo/admin')
-        } else if (data.user.role === 'restaurateur') {
-          console.log('Redirection vers restaurateur...')
+        } else if (data.user.role === 'RESTAURANT') {
           router.push('/bo/restaurateur')
         }
       }

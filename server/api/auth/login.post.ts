@@ -1,32 +1,25 @@
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig()
   const body = await readBody(event)
   const { email, password } = body
 
   if (!email || !password) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Email et mot de passe requis'
-    })
+    throw createError({ statusCode: 400, statusMessage: 'Email et mot de passe requis' })
   }
 
-  // Lire le fichier des utilisateurs clients
-  const users = await $fetch('/api/client/users') as any[]
-  
-  // Chercher l'utilisateur
-  const user = users.find((u: any) => u.email === email && u.password === password)
-  
-  if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Email ou mot de passe incorrect'
+  try {
+    const response = await $fetch<{ token: string; user: any }>(`${config.apiBaseUrl}/api/auth/login`, {
+      method: 'POST',
+      body: { email, password },
     })
-  }
-
-  // Retourner l'utilisateur sans le mot de passe
-  const { password: _, ...userWithoutPassword } = user
-  
-  return {
-    user: userWithoutPassword,
-    message: 'Connexion réussie'
+    return {
+      user: { ...response.user, token: response.token },
+      message: 'Connexion réussie',
+    }
+  } catch (e: any) {
+    throw createError({
+      statusCode: e.statusCode || 401,
+      statusMessage: e.data?.detail || 'Email ou mot de passe incorrect',
+    })
   }
 })

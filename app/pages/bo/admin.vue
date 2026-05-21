@@ -7,13 +7,19 @@
       </div>
       <nav class="bo-nav">
         <ul>
-          <li class="active">
+          <li :class="{ active: currentPage === 'restaurateurs' }">
             <a href="#" @click.prevent="currentPage = 'restaurateurs'">
               <i class="icon">🏪</i>
               <span>Restaurateurs</span>
             </a>
           </li>
-          <li>
+          <li :class="{ active: currentPage === 'comptes' }">
+            <a href="#" @click.prevent="switchToComptes">
+              <i class="icon">👥</i>
+              <span>Tous les comptes</span>
+            </a>
+          </li>
+          <li :class="{ active: currentPage === 'parametres' }">
             <a href="#" @click.prevent="currentPage = 'parametres'">
               <i class="icon">⚙️</i>
               <span>Paramètres</span>
@@ -39,8 +45,33 @@
         </button>
       </div>
 
+      <!-- Page Tous les comptes -->
+      <div v-if="currentPage === 'comptes'" class="bo-content">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Rôle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in allUsers" :key="user.id">
+              <td>{{ user.email }}</td>
+              <td>{{ user.firstName || '—' }}</td>
+              <td>{{ user.lastName || '—' }}</td>
+              <td><span class="badge" :class="'badge-' + user.role.toLowerCase()">{{ user.role }}</span></td>
+            </tr>
+            <tr v-if="allUsers.length === 0">
+              <td colspan="4" class="empty-cell">Aucun compte trouvé</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- Liste des restaurateurs -->
-      <div class="bo-content">
+      <div v-if="currentPage === 'restaurateurs'" class="bo-content">
         <div v-if="restaurateurs.length === 0" class="empty-state">
           <div class="empty-icon">🏪</div>
           <h3>Aucun restaurateur</h3>
@@ -94,6 +125,19 @@
             <label for="new-password">Mot de passe</label>
             <input id="new-password" v-model="newPassword" type="password" class="form-control" placeholder="Mot de passe" required />
           </div>
+          <hr>
+          <div class="form-group">
+            <label for="new-resto-name">Nom du restaurant</label>
+            <input id="new-resto-name" v-model="newRestaurantName" type="text" class="form-control" placeholder="Le Bon Resto" required />
+          </div>
+          <div class="form-group">
+            <label for="new-resto-address">Adresse</label>
+            <input id="new-resto-address" v-model="newRestaurantAddress" type="text" class="form-control" placeholder="12 rue de la Paix" required />
+          </div>
+          <div class="form-group">
+            <label for="new-resto-city">Ville</label>
+            <input id="new-resto-city" v-model="newRestaurantCity" type="text" class="form-control" placeholder="Paris" required />
+          </div>
           <div v-if="error" class="alert alert-danger">{{ error }}</div>
           <div class="modal-footer">
             <button type="button" @click="showAddForm = false" class="btn btn-secondary">Annuler</button>
@@ -117,11 +161,11 @@
           </div>
           <div class="form-group">
             <label for="edit-nom">Nom</label>
-            <input id="edit-nom" v-model="editForm.nom" type="text" class="form-control" placeholder="Nom" />
+            <input id="edit-nom" v-model="editForm.lastName" type="text" class="form-control" placeholder="Nom" />
           </div>
           <div class="form-group">
             <label for="edit-prenom">Prénom</label>
-            <input id="edit-prenom" v-model="editForm.prenom" type="text" class="form-control" placeholder="Prénom" />
+            <input id="edit-prenom" v-model="editForm.firstName" type="text" class="form-control" placeholder="Prénom" />
           </div>
           <div class="form-group">
             <label for="edit-password">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
@@ -146,95 +190,147 @@ definePageMeta({
 
 import { ref, onMounted } from 'vue'
 import type { User } from '~/modules/user/types'
+import { useBoAuthStore } from '@/stores/user/boAuthStore'
+
+const boAuth = useBoAuthStore()
 
 const restaurateurs = ref<User[]>([])
+const allUsers = ref<User[]>([])
 const newEmail = ref('')
 const newPassword = ref('')
 const newNom = ref('')
 const newPrenom = ref('')
+const newRestaurantName = ref('')
+const newRestaurantAddress = ref('')
+const newRestaurantCity = ref('')
 const error = ref('')
 const showAddForm = ref(false)
 const showEditForm = ref(false)
 const currentPage = ref('restaurateurs')
-const editingRestaurateurId = ref<number | null>(null)
+const editingRestaurateurId = ref<string | null>(null)
 const editForm = ref({
   email: '',
   password: '',
-  nom: '',
-  prenom: ''
+  firstName: '',
+  lastName: ''
 })
+
+const getBoUser = () => {
+  if (import.meta.client) {
+    const data = localStorage.getItem('bo-user')
+    return data ? JSON.parse(data) : null
+  }
+  return null
+}
 
 const fetchRestaurateurs = async () => {
   try {
     const res = await fetch('/api/bo/restaurateurs')
     const data = await res.json()
-    // On filtre pour ne garder que les users avec role 'restaurateur'
-    restaurateurs.value = (data.restaurateurs || []).filter((u: User) => u.role === 'restaurateur')
+    restaurateurs.value = (data.restaurateurs || []).filter((u: User) => u.role === 'RESTAURANT')
   } catch (e) {
-    // En cas d'erreur API, utilise les données du JSON
-    console.error('Erreur API, utilisation des données statiques')
+    console.error('Erreur API restaurateurs')
     restaurateurs.value = []
   }
+}
+
+const fetchAllUsers = async () => {
+  const boUser = getBoUser()
+  try {
+    allUsers.value = await $fetch<User[]>('/api/users', {
+      headers: boUser?.token ? { Authorization: `Bearer ${boUser.token}` } : {},
+    })
+  } catch (e) {
+    console.error('Erreur chargement comptes')
+    allUsers.value = []
+  }
+}
+
+const switchToComptes = async () => {
+  currentPage.value = 'comptes'
+  await fetchAllUsers()
 }
 
 onMounted(fetchRestaurateurs)
 
 const addRestaurateur = async () => {
   error.value = ''
-  // Simuler l'ajout
-  const newId = restaurateurs.value.length > 0 ? Math.max(...restaurateurs.value.map(r => r.id)) + 1 : 1
-  restaurateurs.value.push({
-    id: newId,
-    email: newEmail.value,
-    role: 'restaurateur',
-    nom: newNom.value,
-    prenom: newPrenom.value,
-    restaurantId: 0,
-    password: newPassword.value
-  })
-  newEmail.value = ''
-  newPassword.value = ''
-  newNom.value = ''
-  newPrenom.value = ''
-  showAddForm.value = false
-}
-
-const removeRestaurateur = async (id: number) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer ce restaurateur ?')) {
-    restaurateurs.value = restaurateurs.value.filter(r => r.id !== id)
+  try {
+    const res = await $fetch<{ user: any; message: string }>('/api/auth/register', {
+      method: 'POST',
+      body: {
+        email: newEmail.value,
+        password: newPassword.value,
+        firstName: newPrenom.value,
+        lastName: newNom.value,
+        role: 'RESTAURANT',
+      },
+    })
+    await $fetch('/api/restaurants', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${res.user.token}` },
+      body: {
+        name: newRestaurantName.value,
+        address: newRestaurantAddress.value,
+        city: newRestaurantCity.value,
+      },
+    })
+    newEmail.value = ''
+    newPassword.value = ''
+    newNom.value = ''
+    newPrenom.value = ''
+    newRestaurantName.value = ''
+    newRestaurantAddress.value = ''
+    newRestaurantCity.value = ''
+    showAddForm.value = false
+    await fetchRestaurateurs()
+  } catch (e: any) {
+    error.value = e.data?.statusMessage || e.data?.detail || "Erreur lors de la création"
   }
 }
 
+const removeRestaurateur = async (id: string) => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer ce restaurateur ?')) {
+    const boUser = getBoUser()
+    try {
+      await $fetch(`/api/users/${id}`, {
+        method: 'DELETE',
+        headers: boUser?.token ? { Authorization: `Bearer ${boUser.token}` } : {},
+      })
+      await fetchRestaurateurs()
+    } catch (e) {
+      console.error('Erreur suppression')
+    }
+  }
+}
 
-/**
- * Modifier un restaurateur
- * @param {User} resto - Le restaurateur à modifier
- */
 const editRestaurateur = (resto: User) => {
   editForm.value = {
     email: resto.email,
-    password: '', // Ne pas pré-remplir le mot de passe
-    nom: resto.nom || '',
-    prenom: resto.prenom || ''
+    password: '',
+    firstName: resto.firstName || '',
+    lastName: resto.lastName || '',
   }
   editingRestaurateurId.value = resto.id
   showEditForm.value = true
 }
 
-const updateRestaurateur = () => {
+const updateRestaurateur = async () => {
   if (editingRestaurateurId.value !== null) {
-    const restoIndex = restaurateurs.value.findIndex(r => r.id === editingRestaurateurId.value)
-    if (restoIndex !== -1 && restaurateurs.value[restoIndex]) {
-      const existingResto = restaurateurs.value[restoIndex]
-      restaurateurs.value[restoIndex] = {
-        id: existingResto.id,
-        role: existingResto.role,
-        restaurantId: existingResto.restaurantId,
-        email: editForm.value.email,
-        nom: editForm.value.nom,
-        prenom: editForm.value.prenom,
-        password: editForm.value.password || existingResto.password
-      }
+    const boUser = getBoUser()
+    try {
+      await $fetch(`/api/users/${editingRestaurateurId.value}`, {
+        method: 'PUT',
+        body: {
+          email: editForm.value.email,
+          firstName: editForm.value.firstName,
+          lastName: editForm.value.lastName,
+        },
+        headers: boUser?.token ? { Authorization: `Bearer ${boUser.token}` } : {},
+      })
+      await fetchRestaurateurs()
+    } catch (e) {
+      console.error('Erreur mise à jour')
     }
   }
   closeEditModal()
@@ -243,23 +339,13 @@ const updateRestaurateur = () => {
 const closeEditModal = () => {
   showEditForm.value = false
   editingRestaurateurId.value = null
-  editForm.value = {
-    email: '',
-    password: '',
-    nom: '',
-    prenom: ''
-  }
+  editForm.value = { email: '', password: '', firstName: '', lastName: '' }
 }
 
 const logout = () => {
-  // Supprimer les données utilisateur du localStorage et du cookie
-  if (import.meta.client) {
-    localStorage.removeItem('bo-user')
-    
-    // Supprimer le cookie d'authentification
-    const authCookie = useCookie('bo-auth')
-    authCookie.value = null
-  }
+  boAuth.logout()
+  const authCookie = useCookie('bo-auth')
+  authCookie.value = null
   navigateTo('/bo')
 }
 
@@ -644,5 +730,58 @@ const formatDate = (date: Date) => {
   .restaurateurs-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.users-table th {
+  background: #f7fafc;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.users-table td {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tr:hover td {
+  background: #f7fafc;
+}
+
+.empty-cell {
+  text-align: center;
+  color: #718096;
+  padding: 2rem !important;
+}
+
+.badge-admin {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.badge-restaurant {
+  background: #c6f6d5;
+  color: #276749;
+}
+
+.badge-user {
+  background: #bee3f8;
+  color: #2b6cb0;
 }
 </style>

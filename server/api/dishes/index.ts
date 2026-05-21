@@ -1,15 +1,25 @@
-import dishes from "../../data/dishes.json";
-import type { Dish } from "~/modules/dish/types";
+import type { Dish } from '~/modules/dish/types'
 
-export default defineEventHandler((event) => {
-  const query = getQuery(event)
-  const restaurantId = query.restaurantId
-  
-  if (restaurantId) {
-    // Filtrer par restaurant si spécifié
-    const filteredDishes = dishes.filter((dish: Dish) => dish.restaurantId === parseInt(restaurantId as string))
-    return filteredDishes as Dish[]
+export default defineEventHandler(async (event): Promise<Dish | Dish[]> => {
+  const config = useRuntimeConfig()
+  const method = getMethod(event)
+  const authHeader = getHeader(event, 'authorization')
+  const headers: Record<string, string> = authHeader ? { Authorization: authHeader } : {}
+
+  if (method === 'POST') {
+    const body = await readBody(event)
+    const { restaurantId, ...dishData } = body
+    return await $fetch<Dish>(`${config.apiBaseUrl}/api/restaurants/${restaurantId}/dishes`, {
+      method: 'POST',
+      headers,
+      body: dishData,
+    })
   }
-  
-  return dishes as Dish[];
-});
+
+  const query = getQuery(event)
+  const restaurantId = query.restaurantId as string | undefined
+  const url = restaurantId
+    ? `${config.apiBaseUrl}/api/dishes?restaurantId=${restaurantId}`
+    : `${config.apiBaseUrl}/api/dishes`
+  return await $fetch<Dish[]>(url)
+})

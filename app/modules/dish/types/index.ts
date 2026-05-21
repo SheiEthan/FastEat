@@ -1,10 +1,10 @@
 export type Dish = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
   category: string;
   image?: string;
-  restaurantId: number;
+  restaurantId: string;
   quantity?: number;
 };
