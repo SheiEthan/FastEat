@@ -9,7 +9,7 @@ describe('User Store', () => {
 
   it('setUser définit l’utilisateur et isAuthenticated à true', () => {
     const store = useUserStore()
-    const fakeUser = { id: 1, firstName: 'John', lastName: 'Doe', email: 'john@doe.com' }
+    const fakeUser = { id: '1', firstName: 'John', lastName: 'Doe', email: 'john@doe.com' }
     store.setUser(fakeUser)
     expect(store.user).toEqual(fakeUser)
     expect(store.isAuthenticated).toBe(true)
@@ -17,7 +17,7 @@ describe('User Store', () => {
 
   it('logout réinitialise l’utilisateur et isAuthenticated à false', () => {
     const store = useUserStore()
-    const fakeUser = { id: 1, firstName: 'John', lastName: 'Doe', email: 'john@doe.com' }
+    const fakeUser = { id: '1', firstName: 'John', lastName: 'Doe', email: 'john@doe.com' }
     store.setUser(fakeUser)
     store.logout()
     expect(store.user).toBeNull()

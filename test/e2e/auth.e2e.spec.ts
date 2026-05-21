@@ -11,9 +11,9 @@ import { test, expect } from '@nuxt/test-utils/playwright'
     // Cliquer sur l'onglet "Connexion" (au cas où l'inscription serait affichée par défaut)
     await page.getByRole('button', { name: 'Connexion' }).click()
     // Remplir le champ email
-    await page.getByLabel('Email').fill('jean@client.com')
+    await page.getByLabel('Email').fill('ethan.tillier@gmail.com')
     // Remplir le champ mot de passe
-    await page.getByLabel('Mot de passe').fill('password123')
+    await page.getByLabel('Mot de passe').fill('testtest')
     // Cliquer sur le bouton "Se connecter"
     await page.getByRole('button', { name: /se connecter/i }).click()
     // Vérifier que l'utilisateur est bien redirigé vers la page d'accueil après connexion
