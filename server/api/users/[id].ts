@@ -11,9 +11,9 @@ export default defineEventHandler(async (event) => {
     if (method === 'DELETE') {
       return await $fetch<unknown>(baseUrl + `/api/users/${id}`, { method: 'DELETE', headers })
     }
-    if (method === 'PUT') {
+    if (method === 'PUT' || method === 'PATCH') {
       const body = await readBody(event)
-      return await $fetch<unknown>(baseUrl + `/api/users/${id}`, { method: 'PUT', headers, body })
+      return await $fetch<unknown>(baseUrl + `/api/users/${id}`, { method, headers, body })
     }
     return await $fetch<unknown>(baseUrl + `/api/users/${id}`, { headers })
   } catch (e: any) {

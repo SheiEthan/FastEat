@@ -132,6 +132,9 @@
 </template>
 
 <script setup lang="ts">
+import { useClientAuthStore } from '@/stores/user/clientAuthStore'
+
+const clientAuth = useClientAuthStore()
 const currentTab = ref('login')
 const error = ref('')
 const loading = ref(false)
@@ -164,22 +167,18 @@ const handleLogin = async () => {
     }) as { user: any; message: string }
     
     if (response.user) {
-      // Sauvegarder l'utilisateur
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(response.user))
-        
-        // Définir le cookie d'authentification
-        const authCookie = useCookie('auth', {
-          default: () => '',
-          httpOnly: false,
-          secure: false,
-          sameSite: 'lax',
-          maxAge: 60 * 60 * 24 * 30 // 30 jours
-        })
-        authCookie.value = JSON.stringify(response.user)
-      }
-      
-      // Rediriger vers l'accueil
+      clientAuth.setUser(response.user)
+      clientAuth.saveToStorage()
+
+      const authCookie = useCookie('auth', {
+        default: () => '',
+        httpOnly: false,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30
+      })
+      authCookie.value = JSON.stringify(response.user)
+
       await navigateTo('/')
     }
   } catch (e: any) {
@@ -212,22 +211,18 @@ const handleRegister = async () => {
     }) as { user: any; message: string }
     
     if (response.user) {
-      // Sauvegarder l'utilisateur
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(response.user))
-        
-        // Définir le cookie d'authentification
-        const authCookie = useCookie('auth', {
-          default: () => '',
-          httpOnly: false,
-          secure: false,
-          sameSite: 'lax',
-          maxAge: 60 * 60 * 24 * 30 // 30 jours
-        })
-        authCookie.value = JSON.stringify(response.user)
-      }
-      
-      // Rediriger vers l'accueil
+      clientAuth.setUser(response.user)
+      clientAuth.saveToStorage()
+
+      const authCookie = useCookie('auth', {
+        default: () => '',
+        httpOnly: false,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30
+      })
+      authCookie.value = JSON.stringify(response.user)
+
       await navigateTo('/')
     }
   } catch (e: any) {

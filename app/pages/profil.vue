@@ -7,7 +7,7 @@
             <h3 class="text-center">{{ $t('my_profile') }}</h3>
           </div>
           <div class="card-body">
-            <div v-if="!userStore.user" class="text-center">
+            <div v-if="!clientAuth.user" class="text-center">
               <p>{{ $t('loading') }}</p>
             </div>
             
@@ -18,7 +18,7 @@
                   <input 
                     type="text" 
                     class="form-control" 
-                    id="prenom" 
+                    id="name" 
                     v-model="profileForm.prenom"
                     placeholder="Entrez votre prénom"
                   />
@@ -89,7 +89,7 @@
               
               <div class="mb-3">
                 <small class="text-muted">
-                  {{ $t('member_since') }} {{ formatDate(userStore.user?.registrationDate) }}
+                  {{ $t('member_since') }} {{ formatDate((clientAuth.user as any)?.registrationDate) }}
                 </small>
               </div>
               
@@ -112,8 +112,7 @@
 
 <script setup lang="ts">
 import { useHead, useSeoMeta } from '@unhead/vue'
-import type { Client } from '~/modules/client/types'
-import { useUserStore } from '~/stores/user/userStore'
+import { useClientAuthStore } from '@/stores/user/clientAuthStore'
 import { onMounted, ref } from 'vue'
 
 useSeoMeta({
@@ -126,7 +125,7 @@ useSeoMeta({
 
 definePageMeta({ SSR: false })
 
-const userStore = useUserStore()
+const clientAuth = useClientAuthStore()
 const isLoading = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
@@ -143,31 +142,28 @@ const profileForm = ref({
   }
 })
 
-// Charger les infos utilisateur depuis le store
-onMounted(() => {
-  let user = userStore.user
-  // Fallback : si le store est vide, charger depuis localStorage
-  if (!user && typeof window !== 'undefined') {
-    const userData = localStorage.getItem('user')
-    if (userData) {
-      try {
-        user = JSON.parse(userData)
-        userStore.user = user
-      } catch {}
-    }
-  }
-  if (user) {
+onMounted(async () => {
+  clientAuth.loadFromStorage()
+  const token = clientAuth.user?.token
+  if (!token) return
+  try {
+    const user = await $fetch<any>('/api/users/me', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    clientAuth.setUser({ ...clientAuth.user, ...user })
     profileForm.value = {
       prenom: user.firstName || '',
       nom: user.lastName || '',
       email: user.email || '',
       telephone: user.phone || '',
       adresse: {
-        rue: user.address?.street || '',
-        codePostal: user.address?.postalCode || '',
-        ville: user.address?.city || ''
+        rue: user.street || '',
+        codePostal: user.postalCode || '',
+        ville: user.city || ''
       }
     }
+  } catch (e) {
+    console.error('Erreur chargement profil:', e)
   }
 })
 
@@ -186,27 +182,21 @@ const updateProfile = async () => {
   message.value = ''
   try {
     // Simuler une sauvegarde (en production, appeler une API)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    // Mettre à jour le store utilisateur
-    const updatedUser: Client = {
-      ...userStore.user,
-      id: userStore.user?.id ?? 0,
-      firstName: profileForm.value.prenom,
-      lastName: profileForm.value.nom,
-      email: profileForm.value.email,
-      phone: profileForm.value.telephone,
-      address: {
+    const token = clientAuth.user?.token
+    const updated = await $fetch<any>('/api/users/me', {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` },
+      body: {
+        firstName: profileForm.value.prenom,
+        lastName: profileForm.value.nom,
+        phone: profileForm.value.telephone,
         street: profileForm.value.adresse.rue,
         postalCode: profileForm.value.adresse.codePostal,
-        city: profileForm.value.adresse.ville
-      },
-      registrationDate: userStore.user?.registrationDate ?? '',
-      orders: userStore.user?.orders ?? [],
-      image: userStore.user?.image,
-      description: userStore.user?.description,
-      password: userStore.user?.password ?? ''
-    }
-    userStore.user = updatedUser
+        city: profileForm.value.adresse.ville,
+      }
+    })
+    clientAuth.setUser({ ...clientAuth.user, ...updated })
+    clientAuth.saveToStorage()
     message.value = 'Profil mis à jour avec succès !'
     messageType.value = 'success'
     setTimeout(() => {
