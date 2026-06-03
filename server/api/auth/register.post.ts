@@ -8,12 +8,12 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch<{ token: string; user: any }>(`${config.apiBaseUrl}/api/auth/register`, {
+    const response = await $fetch<{ accessToken: string; refreshToken: string; user: any }>(`${config.apiBaseUrl}/api/auth/register`, {
       method: 'POST',
       body: { email, password, firstName, lastName, ...(role ? { role } : {}) },
     })
     return {
-      user: { ...response.user, token: response.token },
+      user: { ...response.user, token: response.accessToken, refreshToken: response.refreshToken },
       message: 'Inscription réussie',
     }
   } catch (e: any) {
