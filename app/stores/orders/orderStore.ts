@@ -1,40 +1,71 @@
 import { defineStore } from 'pinia'
-import type { Dish } from '~/modules/dish/types'
 import type { Order } from '~/modules/order/types'
+import { useClientAuthStore } from '~/stores/user/clientAuthStore'
 
 export const useOrderStore = defineStore('orders', {
   state: () => ({
-    orders: [] as Order[]
+    orders: [] as Order[],
   }),
 
   getters: {
-    getAllOrders: (state) => state.orders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    getAllOrders: (state) =>
+      [...state.orders].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
   },
 
   actions: {
-    addOrder(items: Dish[], total: number) {
-      const newOrder: Order = {
-        id: Date.now(),
-        date: new Date().toLocaleDateString('fr-FR', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        items: [...items],
-        total: total
+    async fetchOrders() {
+      const clientAuth = useClientAuthStore()
+      clientAuth.loadFromStorage()
+      const token = clientAuth.user?.token
+      const userId = clientAuth.user?.id
+      if (!token || !userId) return
+
+      try {
+        const result = await $fetch<{ data: Order[] }>(`/api/users/${userId}/orders`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        this.orders = result.data ?? []
+      } catch (e) {
+        console.error('Erreur chargement commandes:', e)
       }
-      this.orders.push(newOrder)
     },
 
-    placeOrder(cartListStore: any, totalPrice: number) {
-      if (cartListStore.dishes.length > 0) {
-        this.addOrder(cartListStore.dishes, totalPrice)
-        cartListStore.dishes.length = 0
-        navigateTo('/order')
+    async placeOrder(cartListStore: any) {
+      const clientAuth = useClientAuthStore()
+      clientAuth.loadFromStorage()
+      const token = clientAuth.user?.token
+      if (!token) {
+        navigateTo('/auth')
+        return
       }
-    }
+
+      const firstRestaurantId = cartListStore.dishes[0]?.restaurantId
+      if (!firstRestaurantId) return
+
+      const deliveryAddress = clientAuth.user?.street || '1 Rue de la Livraison'
+      const deliveryCity = clientAuth.user?.city || 'Paris'
+
+      const order = await $fetch<Order>('/api/orders', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: {
+          restaurantId: firstRestaurantId,
+          deliveryAddress,
+          deliveryCity,
+          items: cartListStore.dishes.map((d: any) => ({
+            dishId: d.id,
+            quantity: d.quantity ?? 1,
+          })),
+        },
+      })
+
+      this.orders.unshift(order)
+      cartListStore.dishes.length = 0
+      navigateTo('/order')
+    },
   },
-  persist: true
+
+  persist: false,
 })

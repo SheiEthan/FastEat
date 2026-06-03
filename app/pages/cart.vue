@@ -119,11 +119,11 @@ const cartListStore = useCartListStore();
 const orderStore = useOrderStore();
 
 // Récupération des données des restaurants
-const restaurants = await $fetch('/api/restaurants');
+const restaurants = (await $fetch('/api/restaurants')) as { id: string; name: string }[];
 
 // Grouper les plats par restaurant
 const restaurantGroups = computed(() => {
-  const groups: Record<number, { id: number; name: string; dishes: Dish[] }> = {};
+  const groups: Record<string, { id: string; name: string; dishes: Dish[] }> = {};
   
   cartListStore.dishes.forEach(dish => {
     const restaurant = restaurants.find((r: any) => r.id === dish.restaurantId);
@@ -168,8 +168,12 @@ const decrementQuantity = (dish: Dish) => {
   cartListStore.decrementQuantity(dish)
 }
 
-const passOrder = () => {
-  orderStore.placeOrder(cartListStore, parseFloat(totalPrice.value))
+const passOrder = async () => {
+  try {
+    await orderStore.placeOrder(cartListStore)
+  } catch (e: any) {
+    alert(e.data?.message || 'Erreur lors de la commande')
+  }
 }
 </script>
 

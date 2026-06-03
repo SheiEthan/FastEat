@@ -155,6 +155,7 @@
           <h2>Commandes Reçues</h2>
           <div class="commandes-stats">
             <span class="stat">{{ commandes.length }} commandes</span>
+            <span class="stat pending">{{ commandes.filter(c => c.status === 'PENDING').length }} en attente</span>
           </div>
         </div>
 
@@ -162,25 +163,31 @@
           <div v-for="commande in commandes" :key="commande.id" class="commande-card">
             <div class="commande-header">
               <div class="commande-info">
-                <h3>Commande #{{ commande.id }}</h3>
-                <p class="commande-date">{{ formatDate(commande.date) }}</p>
+                <h3>Commande #{{ commande.id.slice(0, 8) }}</h3>
+                <p class="commande-date">{{ formatDate(commande.createdAt) }}</p>
+                <p class="commande-address">📍 {{ commande.deliveryAddress }}, {{ commande.deliveryCity }}</p>
               </div>
               <div class="commande-total">
-                <span class="total">{{ commande.total }}€</span>
-                <span class="status" :class="commande.status">{{ getStatusText(commande.status) }}</span>
+                <span class="total">{{ commande.totalPrice }}€</span>
+                <span class="status" :class="commande.status.toLowerCase()">{{ getStatusText(commande.status) }}</span>
               </div>
             </div>
             <div class="commande-items">
               <div v-for="item in commande.items" :key="item.id" class="commande-item">
-                <span class="item-name">{{ item.name }}</span>
+                <span class="item-name">{{ getDishName(item.dishId) }}</span>
                 <span class="item-quantity">x{{ item.quantity }}</span>
-                <span class="item-price">{{ item.price * (item.quantity ? item.quantity : 1) }}€</span>
+                <span class="item-price">{{ item.subtotal }}€</span>
               </div>
             </div>
+            <div v-if="commande.notes" class="commande-notes">
+              <small>📝 {{ commande.notes }}</small>
+            </div>
             <div class="commande-actions">
-              <button v-if="commande.status === 'pending'" @click="updateCommandeStatus(commande.id, 'confirmed')" class="btn btn-small btn-success">Confirmer</button>
-              <button v-if="commande.status === 'confirmed'" @click="updateCommandeStatus(commande.id, 'ready')" class="btn btn-small btn-warning">Prêt</button>
-              <button v-if="commande.status === 'ready'" @click="updateCommandeStatus(commande.id, 'delivered')" class="btn btn-small btn-info">Livré</button>
+              <button v-if="commande.status === 'PENDING'" @click="updateCommandeStatus(commande.id, 'CONFIRMED')" class="btn btn-small btn-success">Confirmer</button>
+              <button v-if="commande.status === 'CONFIRMED'" @click="updateCommandeStatus(commande.id, 'PREPARING')" class="btn btn-small btn-warning">En préparation</button>
+              <button v-if="commande.status === 'PREPARING'" @click="updateCommandeStatus(commande.id, 'READY')" class="btn btn-small btn-info">Prêt</button>
+              <button v-if="commande.status === 'READY'" @click="updateCommandeStatus(commande.id, 'DELIVERED')" class="btn btn-small btn-primary">Livré</button>
+              <button v-if="['PENDING', 'CONFIRMED'].includes(commande.status)" @click="updateCommandeStatus(commande.id, 'CANCELLED')" class="btn btn-small btn-danger">Annuler</button>
             </div>
           </div>
         </div>
@@ -191,6 +198,25 @@
         </div>
       </div>
     </main>
+
+    <!-- Notifications nouvelles commandes -->
+    <div class="notifications-container">
+      <TransitionGroup name="notif">
+        <div v-for="notif in wsNotifications" :key="notif.id" class="notification-toast">
+          <div class="notif-header">
+            <span>🍽️ Nouvelle commande !</span>
+            <button class="notif-close" @click="dismissNotification(notif.id)">×</button>
+          </div>
+          <div class="notif-body">
+            <p class="notif-id">Commande #{{ notif.orderId.slice(0, 8) }}</p>
+            <p class="notif-details">{{ notif.totalPrice }}€ · {{ notif.itemCount }} article(s)</p>
+          </div>
+          <button class="btn btn-small btn-success notif-btn" @click="goToCommandes(notif.id)">
+            Voir les commandes
+          </button>
+        </div>
+      </TransitionGroup>
+    </div>
   </div>
 </template>
 
@@ -201,9 +227,17 @@ definePageMeta({
   middleware: 'bo-auth-global-client'
 })
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import type { Dish } from '~/modules/dish/types'
+import type { Order } from '~/modules/order/types'
 import { useBoAuthStore } from '@/stores/user/boAuthStore'
+
+interface WsNotification {
+  id: string
+  orderId: string
+  totalPrice: number
+  itemCount: number
+}
 
 const boAuth = useBoAuthStore()
 
@@ -215,7 +249,7 @@ const editingPlatId = ref<string | null>(null)
 
 const userRestaurant = ref<any>(null)
 const plats = ref<Dish[]>([])
-const commandes = ref<any[]>([])
+const commandes = ref<Order[]>([])
 
 const currentUser = boAuth.user
 
@@ -239,9 +273,26 @@ const loadData = async () => {
       description: resto.description || '',
     }
     plats.value = await $fetch<Dish[]>('/api/dishes', { query: { restaurantId: resto.id } })
+    await fetchCommandes(resto.id)
   } catch (e) {
     console.error('Erreur chargement:', e)
   }
+}
+
+const fetchCommandes = async (restaurantId: string) => {
+  try {
+    const result = await $fetch<{ data: Order[] }>(`/api/restaurants/${restaurantId}/orders`, {
+      headers: getAuthHeaders(),
+      query: { limit: 50, offset: 0 },
+    })
+    commandes.value = result.data ?? []
+  } catch (e) {
+    console.error('Erreur chargement commandes:', e)
+  }
+}
+
+const getDishName = (dishId: string): string => {
+  return plats.value.find(p => p.id === dishId)?.name ?? dishId.slice(0, 8)
 }
 
 const logout = () => {
@@ -323,9 +374,18 @@ const closeModal = () => {
   platForm.value = { name: '', image: '', price: 0, description: '', category: 'MAIN_COURSE' }
 }
 
-const updateCommandeStatus = (commandeId: string, newStatus: string) => {
-  const commande = commandes.value.find(c => c.id === commandeId)
-  if (commande) commande.status = newStatus
+const updateCommandeStatus = async (commandeId: string, newStatus: Order['status']) => {
+  try {
+    const updated = await $fetch<Order>(`/api/orders/${commandeId}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: { status: newStatus },
+    })
+    const idx = commandes.value.findIndex(c => c.id === commandeId)
+    if (idx !== -1) commandes.value[idx] = updated
+  } catch (e) {
+    console.error('Erreur mise à jour statut:', e)
+  }
 }
 
 const formatDate = (dateString: string) => {
@@ -344,9 +404,65 @@ const getStatusText = (status: string) => {
   return statusMap[status] || status
 }
 
+const wsNotifications = ref<WsNotification[]>([])
+let ws: WebSocket | null = null
+let wsReconnectTimer: ReturnType<typeof setTimeout> | null = null
+
+const connectWebSocket = () => {
+  const config = useRuntimeConfig()
+  const token = boAuth.user?.token
+  if (!token) return
+
+  ws = new WebSocket(`${config.public.wsUrl}/ws/restaurant`)
+
+  ws.onopen = () => {
+    ws?.send(JSON.stringify({ event: 'authenticate', token }))
+  }
+
+  ws.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data)
+      if (msg.event === 'new-order') {
+        const notif: WsNotification = {
+          id: Date.now().toString(),
+          orderId: msg.data.orderId,
+          totalPrice: msg.data.totalPrice,
+          itemCount: msg.data.itemCount,
+        }
+        wsNotifications.value.unshift(notif)
+        if (userRestaurant.value) fetchCommandes(userRestaurant.value.id)
+        setTimeout(() => dismissNotification(notif.id), 10000)
+      }
+    } catch {}
+  }
+
+  ws.onclose = () => {
+    wsReconnectTimer = setTimeout(connectWebSocket, 5000)
+  }
+
+  ws.onerror = () => {
+    ws?.close()
+  }
+}
+
+const dismissNotification = (id: string) => {
+  wsNotifications.value = wsNotifications.value.filter(n => n.id !== id)
+}
+
+const goToCommandes = (notifId: string) => {
+  dismissNotification(notifId)
+  currentPage.value = 'commandes'
+}
+
 onMounted(async () => {
   boAuth.loadFromStorage()
   await loadData()
+  connectWebSocket()
+})
+
+onUnmounted(() => {
+  if (wsReconnectTimer) clearTimeout(wsReconnectTimer)
+  ws?.close()
 })
 </script>
 
@@ -1017,5 +1133,78 @@ onMounted(async () => {
   .commandes-stats {
     flex-wrap: wrap;
   }
+}
+
+/* Notifications WebSocket */
+.notifications-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 320px;
+}
+
+.notification-toast {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 1rem;
+  border-left: 4px solid #27ae60;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #27ae60;
+}
+
+.notif-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+  line-height: 1;
+  padding: 0;
+}
+
+.notif-close:hover { color: #333; }
+
+.notif-body {
+  margin-bottom: 0.75rem;
+}
+
+.notif-id {
+  font-weight: 500;
+  margin: 0 0 0.2rem;
+}
+
+.notif-details {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.notif-btn { width: 100%; }
+
+.notif-enter-active,
+.notif-leave-active {
+  transition: all 0.3s ease;
+}
+
+.notif-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notif-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
 }
 </style>

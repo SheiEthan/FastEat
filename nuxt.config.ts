@@ -5,6 +5,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     apiBaseUrl: 'http://localhost:3000',
+    public: {
+      wsUrl: 'ws://localhost:3000',
+    },
   },
 
   devServer: {
